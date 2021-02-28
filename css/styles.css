@@ -1,0 +1,105 @@
+.navbar {
+  position: absolute;
+  z-index: 9;
+  top: 0px;
+  height: 50px;
+  width: 100%;
+}
+
+.form-inline {
+  position: absolute;
+  z-index: 9;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+
+#map {
+  position: absolute;
+  z-index: 0;
+  top: 50px;
+  bottom: 0;
+  width: 100%;
+}
+
+#country {
+  text-align: center;
+}
+
+#info,
+#weather {
+  position: absolute;
+  display: none;
+  z-index: 1;
+  right: 10px;
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  line-height: 0.2;
+}
+
+#info {
+  top: 60px;
+}
+
+#weather {
+  bottom: 40px;
+}
+
+h4 {
+  font-size: 1.1rem;
+}
+
+p {
+  font-size: 0.9rem;
+}
+
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+  overflow: hidden;
+  background: #fff;
+}
+
+#preloader:before {
+  content: "";
+  position: fixed;
+  top: calc(50% - 30px);
+  left: calc(50% - 30px);
+  border: 6px solid #f2f2f2;
+  border-top: 6px solid #56829e;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: animate-preloader 1s linear infinite;
+  animation: animate-preloader 1s linear infinite;
+}
+
+@-webkit-keyframes animate-preloader {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes animate-preloader {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
