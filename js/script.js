@@ -15,6 +15,7 @@ var map = L.map("map", {
 
 L.tileLayer.provider("Stamen.Watercolor").addTo(map);
 
+
 function setFeature(feature) {
   var feature = L.geoJson(feature).addTo(map);
   map.flyToBounds(feature.getBounds(), { duration: 2 });
@@ -29,7 +30,7 @@ function setInfo(data) {
   $("#info-capital").text(capital);
   $("#info-population").text(population);
   $("#info-currency").text(currency);
-  $("#info").show();
+  $("#accordionExample").show();
 }
 
 function setWeather(weather) {

@@ -26,35 +26,26 @@
   text-align: center;
 }
 
-#info,
-#weather {
-  position: absolute;
+#accordionExample {
   display: none;
+  position: absolute;
   z-index: 1;
-  right: 10px;
-  padding: 6px 8px;
+  top: 60px;
+  right: 0;
+  width: 50%;
+  max-width: 300px;
   font: 14px/16px Arial, Helvetica, sans-serif;
-  background: white;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  line-height: 0.2;
-}
-
-#info {
-  top: 60px;
-}
-
-#weather {
-  bottom: 40px;
 }
 
 h4 {
-  font-size: 1.1rem;
+  font-size: 1.1em;
 }
 
 p {
-  font-size: 0.9rem;
+  font-size: 0.9em;
 }
 
 #preloader {
