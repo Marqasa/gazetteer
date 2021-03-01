@@ -15,18 +15,15 @@ var map = L.map("map", {
 
 L.tileLayer.provider("Stamen.Watercolor").addTo(map);
 
-
 function setFeature(feature) {
   var feature = L.geoJson(feature).addTo(map);
   map.flyToBounds(feature.getBounds(), { duration: 2 });
 }
 
 function setInfo(data) {
-  var name = data.nativeName;
   var capital = data.capital;
   var population = data.population;
   var currency = data.currencies[0].name;
-  $("#info-name").text(name);
   $("#info-capital").text(capital);
   $("#info-population").text(population);
   $("#info-currency").text(currency);
@@ -36,7 +33,19 @@ function setInfo(data) {
 function setWeather(weather) {
   $("#weather-desc").text(weather.weather[0].main);
   $("#weather-temp").text(weather.main.temp + " °C");
-  $("#weather").show();
+}
+
+function setWiki(wiki) {
+  $("#wiki-link0").text(wiki.geonames[0].title);
+  $("#wiki-link0").attr("href", "http://" + wiki.geonames[0].wikipediaUrl);
+  $("#wiki-link1").text(wiki.geonames[1].title);
+  $("#wiki-link1").attr("href", "http://" + wiki.geonames[1].wikipediaUrl);
+  $("#wiki-link2").text(wiki.geonames[2].title);
+  $("#wiki-link2").attr("href", "http://" + wiki.geonames[2].wikipediaUrl);
+  $("#wiki-link3").text(wiki.geonames[3].title);
+  $("#wiki-link3").attr("href", "http://" + wiki.geonames[3].wikipediaUrl);
+  $("#wiki-link4").text(wiki.geonames[4].title);
+  $("#wiki-link4").attr("href", "http://" + wiki.geonames[4].wikipediaUrl);
 }
 
 function requestWeather(city) {
@@ -74,6 +83,23 @@ function requestInfo(iso) {
   });
 }
 
+function requestWiki(name) {
+  $.ajax({
+    url: "php/main.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      type: "wiki",
+      name: name,
+    },
+    success: function (result) {
+      setWiki(result.wiki);
+    },
+
+    error: function (request, status, error) {},
+  });
+}
+
 // Get new coords from country
 $("#country").change(function () {
   $.ajax({
@@ -87,6 +113,7 @@ $("#country").change(function () {
     success: function (result) {
       setFeature(result.feature);
       requestInfo(result.feature.properties.iso_a2);
+      requestWiki(result.feature.properties.name);
       //   setInfo(result.data);
       //   setWeather(result.weather);
     },

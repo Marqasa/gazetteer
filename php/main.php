@@ -36,6 +36,13 @@ switch ($_REQUEST['type']) {
         $decode = json_decode($result, true);
         $output['weather'] = $decode;
         break;
+    case 'wiki':
+        $query = urlEncode($_REQUEST['name']);
+        $endpoint = 'http://api.geonames.org/wikipediaSearchJSON?q=' . $query . '&maxRows=5&username=marqasa';
+        $result = curlRequest($endpoint);
+        $decode = json_decode($result, true);
+        $output['wiki'] = $decode;
+        break;
     default:
         return;
 }
