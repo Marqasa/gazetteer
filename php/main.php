@@ -29,12 +29,20 @@ switch ($_REQUEST['type']) {
         $output['info'] = $decode;
         break;
     case 'weather':
-        $city = $_REQUEST['city'];
-        $weatherKey = 'a686f31ef51e4b3f3ed3a24cc811378d';
-        $endpoint = 'api.openweathermap.org/data/2.5/weather?q=' . $city . '&units=metric&appid=' . $weatherKey;
+        $lat = $_REQUEST['lat'];
+        $lng = $_REQUEST['lng'];
+        $appid = 'a686f31ef51e4b3f3ed3a24cc811378d';
+        $endpoint = 'https://api.openweathermap.org/data/2.5/onecall?lat=' . $lat . '&lon=' . $lng . '&exclude=minutely,hourly,alerts&units=metric&appid=' . $appid;
         $result = curlRequest($endpoint);
         $decode = json_decode($result, true);
         $output['weather'] = $decode;
+        break;
+    case 'currency':
+        $app_id = "e3dcd947ba064c148ee3a7942d89329c";
+        $endpoint = 'https://openexchangerates.org/api/latest.json?app_id=' . $app_id;
+        $result = curlRequest($endpoint);
+        $decode = json_decode($result, true);
+        $output['currency'] = $decode;
         break;
     case 'wiki':
         $query = urlEncode($_REQUEST['name']);
