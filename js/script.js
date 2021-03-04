@@ -34,6 +34,33 @@ var map = L.map("map", {
 
 L.tileLayer.provider("Stamen.Watercolor").addTo(map);
 
+function setInfo(info) {
+  $("#info-flag").attr("src", info.flag);
+
+  $("#info1-name").text("Capital:");
+  $("#info1-value").text(info.capital);
+
+  $("#info2-name").text("Region:");
+  $("#info2-value").text(info.region);
+
+  $("#info3-name").text("Population:");
+  $("#info3-value").text(info.population);
+
+  let languages = info.languages[0].name;
+
+  if (info.languages[1]) {
+    languages += "/" + info.languages[1].name;
+  }
+
+  $("#info4-name").text("Languages:");
+  $("#info4-value").text(languages);
+
+  $("#info5-name").text("Capital:");
+  $("#info5-value").text(info.languages[0].name);
+
+  $("#accordionExample").show();
+}
+
 function getOrdinalNum(n) {
   return (
     n +
@@ -41,14 +68,6 @@ function getOrdinalNum(n) {
       ? ["th", "st", "nd", "rd"][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10]
       : "")
   );
-}
-
-function setInfo(data) {
-  var capital = data.capital;
-  var population = data.population;
-  $("#info-capital").text(capital);
-  $("#info-population").text(population);
-  $("#accordionExample").show();
 }
 
 function setWeather(data) {

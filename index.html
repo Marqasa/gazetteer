@@ -16,9 +16,9 @@
 
   <body>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <form class="form-inline">
-          <select id="country" name="country">
+      <nav class="navbar bg-light justify-content-center">
+        <form class="nav justify-content-center">
+          <select id="country" class="form-select" name="country">
             <option value="Afghanistan">Afghanistan</option>
             <option value="Albania">Albania</option>
             <option value="Algeria">Algeria</option>
@@ -224,10 +224,33 @@
               data-bs-parent="#accordionExample"
             >
               <div class="accordion-body">
-                <h4>Capital:</h4>
-                <p id="info-capital"></p>
-                <h4>Population:</h4>
-                <p id="info-population"></p>
+                <table id="info">
+                  <thead>
+                    <tr>
+                      <th>
+                        <img id="info-flag" class="flag" src="" alt="flag" />
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td id="info1-name"></td>
+                      <td id="info1-value"></td>
+                    </tr>
+                    <tr>
+                      <td id="info2-name"></td>
+                      <td id="info2-value"></td>
+                    </tr>
+                    <tr>
+                      <td id="info3-name"></td>
+                      <td id="info3-value"></td>
+                    </tr>
+                    <tr>
+                      <td id="info4-name"></td>
+                      <td id="info4-value"></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -256,29 +279,64 @@
                   <thead>
                     <tr>
                       <th id="date1"></th>
-                      <th><img id="icon1" src="" alt="weather icon" /></th>
+                      <th>
+                        <img
+                          id="icon1"
+                          class="icon"
+                          src=""
+                          alt="weather icon"
+                        />
+                      </th>
                       <th id="temp1"></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td id="date2"></td>
-                      <td><img id="icon2" src="" alt="weather icon" /></td>
+                      <td>
+                        <img
+                          id="icon2"
+                          class="icon"
+                          src=""
+                          alt="weather icon"
+                        />
+                      </td>
                       <td id="temp2"></td>
                     </tr>
                     <tr>
                       <td id="date3"></td>
-                      <td><img id="icon3" src="" alt="weather icon" /></td>
+                      <td>
+                        <img
+                          id="icon3"
+                          class="icon"
+                          src=""
+                          alt="weather icon"
+                        />
+                      </td>
                       <td id="temp3"></td>
                     </tr>
                     <tr>
                       <td id="date4"></td>
-                      <td><img id="icon4" src="" alt="weather icon" /></td>
+                      <td>
+                        <img
+                          id="icon4"
+                          class="icon"
+                          src=""
+                          alt="weather icon"
+                        />
+                      </td>
                       <td id="temp4"></td>
                     </tr>
                     <tr>
                       <td id="date5"></td>
-                      <td><img id="icon5" src="" alt="weather icon" /></td>
+                      <td>
+                        <img
+                          id="icon5"
+                          class="icon"
+                          src=""
+                          alt="weather icon"
+                        />
+                      </td>
                       <td id="temp5"></td>
                     </tr>
                   </tbody>
