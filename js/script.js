@@ -34,6 +34,32 @@ var map = L.map("map", {
 
 L.tileLayer.provider("Stamen.Watercolor").addTo(map);
 
+function fnum(x) {
+  if (isNaN(x)) return x;
+
+  if (x < 9999) {
+    return x;
+  }
+
+  if (x < 1000000) {
+    return Math.round(x / 1000) + " thousand";
+  }
+
+  if (x < 10000000) {
+    return (x / 1000000).toFixed(2) + " million";
+  }
+
+  if (x < 1000000000) {
+    return Math.round(x / 1000000) + " million";
+  }
+
+  if (x < 1000000000000) {
+    return Math.round(x / 1000000000) + " billion";
+  }
+
+  return "1T+";
+}
+
 function setInfo(info) {
   $("#info-flag").attr("src", info.flag);
 
@@ -43,8 +69,9 @@ function setInfo(info) {
   $("#info2-name").text("Region:");
   $("#info2-value").text(info.region);
 
+  const population = fnum(info.population);
   $("#info3-name").text("Population:");
-  $("#info3-value").text(info.population);
+  $("#info3-value").text(population);
 
   let languages = info.languages[0].name;
 
