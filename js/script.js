@@ -1,5 +1,8 @@
-var days = ["Sun", "Mon", "Tues", "Weds", "Thurs", "Fri", "Sat"];
-var currencies = {
+let changed = false;
+let code = null;
+let feature;
+const days = ["Sun", "Mon", "Tues", "Weds", "Thurs", "Fri", "Sat"];
+const currencies = {
   USD: {
     name: "US Dollar",
   },
@@ -281,8 +284,11 @@ function requestWiki(name) {
 }
 
 // Set and fly to bounds
-function setFeature(feature) {
-  var feature = L.geoJson(feature).addTo(map);
+function setFeature(data) {
+  if (feature) {
+    feature.clearLayers();
+  }
+  feature = L.geoJson(data).addTo(map);
   var bounds = feature.getBounds();
   var center = bounds.getCenter();
   map.flyToBounds(bounds, { duration: 2 });
@@ -292,6 +298,7 @@ function setFeature(feature) {
 
 // Get new coords from country
 $("#country").change(function () {
+  changed = true;
   $.ajax({
     url: "php/main.php",
     type: "POST",
@@ -313,8 +320,20 @@ $("#country").change(function () {
   });
 });
 
-$("#country").val("United Kingdom");
-$("#country").trigger("change");
+$.get(
+  "https://ipinfo.io",
+  function (data) {
+    code = data.country;
+    if (!changed) {
+      $("#country").val(code);
+      $("#country").trigger("change");
+    }
+  },
+  "jsonp"
+);
+
+// $("#country").val("GB");
+// $("#country").trigger("change");
 
 // if (navigator.geolocation) {
 //   navigator.geolocation.getCurrentPosition(setMapView);
