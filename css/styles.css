@@ -1,37 +1,35 @@
+html {
+  font-size: 14px;
+}
 .navbar {
   position: absolute;
-  z-index: 9;
   top: 0;
   width: 100%;
-  height: 10%;
+  height: 9%;
 }
 
 #map {
   position: absolute;
   z-index: 0;
-  top: 10%;
+  top: 9%;
   bottom: 0;
   width: 100%;
 }
 
-#country {
-  text-align: center;
-}
-
-#accordion {
+#collapseInfo {
   position: absolute;
-  z-index: 1;
-  top: 10%;
-  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
   right: 0;
-  width: 50%;
-  max-width: 400px;
+  top: 9%;
+  max-width: 80%;
+  z-index: 1;
 }
 
-#accordionExample {
-  display: none;
+#accordionInfo {
   margin: 10px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.75);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
@@ -41,7 +39,7 @@ table {
 }
 
 .flag {
-    height: 40px;
+  height: 40px;
 }
 
 .icon {
@@ -97,5 +95,35 @@ tr {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 576px) {
+  #collapseInfo {
+    max-width: 70%;
+  }
+}
+
+@media (min-width: 768px) {
+  #collapseInfo {
+    max-width: 60%;
+  }
+}
+
+@media (min-width: 992px) {
+  #collapseInfo {
+    max-width: 50%;
+  }
+}
+
+@media (min-width: 1200px) {
+  #collapseInfo {
+    max-width: 40%;
+  }
+}
+
+@media (min-width: 1400px) {
+  #collapseInfo {
+    max-width: 30%;
   }
 }
