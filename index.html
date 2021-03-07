@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="Sam Walker-Penn" />
     <meta name="description" content="Gazetteer" />
-    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled" />
 
     <link href="favicon.ico" rel="icon" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -16,423 +16,450 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-light bg-light">
-      <div class="container-fluid justify-content-center">
-        <form class="mx-1">
-          <select id="country" class="form-select" name="country">
-            <option value="AF">Afghanistan</option>
-            <option value="AL">Albania</option>
-            <option value="DZ">Algeria</option>
-            <option value="AO">Angola</option>
-            <option value="AR">Argentina</option>
-            <option value="AM">Armenia</option>
-            <option value="AU">Australia</option>
-            <option value="AT">Austria</option>
-            <option value="AZ">Azerbaijan</option>
-            <option value="BS">Bahamas</option>
-            <option value="BD">Bangladesh</option>
-            <option value="BY">Belarus</option>
-            <option value="BE">Belgium</option>
-            <option value="BZ">Belize</option>
-            <option value="BJ">Benin</option>
-            <option value="BT">Bhutan</option>
-            <option value="BO">Bolivia</option>
-            <option value="BA">Bosnia and Herz.</option>
-            <option value="BW">Botswana</option>
-            <option value="BR">Brazil</option>
-            <option value="BN">Brunei</option>
-            <option value="BG">Bulgaria</option>
-            <option value="BF">Burkina Faso</option>
-            <option value="BI">Burundi</option>
-            <option value="CI">Côte d'Ivoire</option>
-            <option value="KH">Cambodia</option>
-            <option value="CM">Cameroon</option>
-            <option value="CA">Canada</option>
-            <option value="CF">Central African Rep.</option>
-            <option value="TD">Chad</option>
-            <option value="CL">Chile</option>
-            <option value="CN">China</option>
-            <option value="CO">Colombia</option>
-            <option value="CG">Congo</option>
-            <option value="CR">Costa Rica</option>
-            <option value="HR">Croatia</option>
-            <option value="CU">Cuba</option>
-            <option value="CY">Cyprus</option>
-            <option value="CZ">Czech Rep.</option>
-            <option value="CD">Dem. Rep. Congo</option>
-            <option value="KP">Dem. Rep. Korea</option>
-            <option value="DK">Denmark</option>
-            <option value="DJ">Djibouti</option>
-            <option value="DO">Dominican Rep.</option>
-            <option value="EC">Ecuador</option>
-            <option value="EG">Egypt</option>
-            <option value="SV">El Salvador</option>
-            <option value="GQ">Eq. Guinea</option>
-            <option value="ER">Eritrea</option>
-            <option value="EE">Estonia</option>
-            <option value="ET">Ethiopia</option>
-            <option value="FK">Falkland Is.</option>
-            <option value="FJ">Fiji</option>
-            <option value="FI">Finland</option>
-            <option value="FR">France</option>
-            <option value="GA">Gabon</option>
-            <option value="GM">Gambia</option>
-            <option value="GE">Georgia</option>
-            <option value="DE">Germany</option>
-            <option value="GH">Ghana</option>
-            <option value="GR">Greece</option>
-            <option value="GL">Greenland</option>
-            <option value="GT">Guatemala</option>
-            <option value="GN">Guinea</option>
-            <option value="GW">Guinea-Bissau</option>
-            <option value="GY">Guyana</option>
-            <option value="HT">Haiti</option>
-            <option value="HN">Honduras</option>
-            <option value="HU">Hungary</option>
-            <option value="IS">Iceland</option>
-            <option value="IN">India</option>
-            <option value="ID">Indonesia</option>
-            <option value="IR">Iran</option>
-            <option value="IQ">Iraq</option>
-            <option value="IE">Ireland</option>
-            <option value="IL">Israel</option>
-            <option value="IT">Italy</option>
-            <option value="JM">Jamaica</option>
-            <option value="JP">Japan</option>
-            <option value="JO">Jordan</option>
-            <option value="KZ">Kazakhstan</option>
-            <option value="KE">Kenya</option>
-            <option value="KR">Korea</option>
-            <option value="XK">Kosovo</option>
-            <option value="KW">Kuwait</option>
-            <option value="KG">Kyrgyzstan</option>
-            <option value="LA">Lao PDR</option>
-            <option value="LV">Latvia</option>
-            <option value="LB">Lebanon</option>
-            <option value="LS">Lesotho</option>
-            <option value="LR">Liberia</option>
-            <option value="LY">Libya</option>
-            <option value="LT">Lithuania</option>
-            <option value="LU">Luxembourg</option>
-            <option value="MK">Macedonia</option>
-            <option value="MG">Madagascar</option>
-            <option value="MW">Malawi</option>
-            <option value="MY">Malaysia</option>
-            <option value="ML">Mali</option>
-            <option value="MR">Mauritania</option>
-            <option value="MX">Mexico</option>
-            <option value="MD">Moldova</option>
-            <option value="MN">Mongolia</option>
-            <option value="ME">Montenegro</option>
-            <option value="MA">Morocco</option>
-            <option value="MZ">Mozambique</option>
-            <option value="MM">Myanmar</option>
-            <option value="CP">N. Cyprus</option>
-            <option value="NA">Namibia</option>
-            <option value="NP">Nepal</option>
-            <option value="NL">Netherlands</option>
-            <option value="NC">New Caledonia</option>
-            <option value="NZ">New Zealand</option>
-            <option value="NI">Nicaragua</option>
-            <option value="NE">Niger</option>
-            <option value="NG">Nigeria</option>
-            <option value="NO">Norway</option>
-            <option value="OM">Oman</option>
-            <option value="PK">Pakistan</option>
-            <option value="PS">Palestine</option>
-            <option value="PA">Panama</option>
-            <option value="PG">Papua New Guinea</option>
-            <option value="PY">Paraguay</option>
-            <option value="PE">Peru</option>
-            <option value="PH">Philippines</option>
-            <option value="PL">Poland</option>
-            <option value="PT">Portugal</option>
-            <option value="PR">Puerto Rico</option>
-            <option value="QA">Qatar</option>
-            <option value="RO">Romania</option>
-            <option value="RU">Russia</option>
-            <option value="RW">Rwanda</option>
-            <option value="SS">S. Sudan</option>
-            <option value="SA">Saudi Arabia</option>
-            <option value="SN">Senegal</option>
-            <option value="RS">Serbia</option>
-            <option value="SL">Sierra Leone</option>
-            <option value="SK">Slovakia</option>
-            <option value="SI">Slovenia</option>
-            <option value="SB">Solomon Is.</option>
-            <option value="SO">Somalia</option>
-            <option value="SM">Somaliland</option>
-            <option value="ZA">South Africa</option>
-            <option value="ES">Spain</option>
-            <option value="LK">Sri Lanka</option>
-            <option value="SD">Sudan</option>
-            <option value="SR">Suriname</option>
-            <option value="SZ">Swaziland</option>
-            <option value="SE">Sweden</option>
-            <option value="CH">Switzerland</option>
-            <option value="SY">Syria</option>
-            <option value="TW">Taiwan</option>
-            <option value="TJ">Tajikistan</option>
-            <option value="TZ">Tanzania</option>
-            <option value="TH">Thailand</option>
-            <option value="TL">Timor-Leste</option>
-            <option value="TG">Togo</option>
-            <option value="TT">Trinidad and Tobago</option>
-            <option value="TN">Tunisia</option>
-            <option value="TR">Turkey</option>
-            <option value="TM">Turkmenistan</option>
-            <option value="UG">Uganda</option>
-            <option value="UA">Ukraine</option>
-            <option value="AE">United Arab Emirates</option>
-            <option value="GB">United Kingdom</option>
-            <option value="US" selected>United States</option>
-            <option value="UY">Uruguay</option>
-            <option value="UZ">Uzbekistan</option>
-            <option value="VU">Vanuatu</option>
-            <option value="VE">Venezuela</option>
-            <option value="VN">Vietnam</option>
-            <option value="EH">W. Sahara</option>
-            <option value="YE">Yemen</option>
-            <option value="ZM">Zambia</option>
-            <option value="ZW">Zimbabwe</option>
-          </select>
-        </form>
-        <button
-          id="info-button"
-          type="button"
-          class="btn btn-outline-info mx-1"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseInfo"
-          aria-expanded="false"
-          aria-controls="collapseInfo"
-        >
-          Info
-        </button>
-      </div>
-    </nav>
-
-    <div id="map"></div>
-
-    <div class="container collapse" id="collapseInfo">
-      <div class="accordion" id="accordionInfo">
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingOne">
-            <button
-              class="accordion-button"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseOne"
-              aria-expanded="true"
-              aria-controls="collapseOne"
-            >
-              Info
-            </button>
-          </h2>
-          <div
-            id="collapseOne"
-            class="accordion-collapse collapse show"
-            aria-labelledby="headingOne"
-            data-bs-parent="#accordionInfo"
+    <div id="main" class="container-fluid">
+      <nav class="row navbar navbar-light bg-light">
+        <div class="container-fluid justify-content-center">
+          <form class="mx-1">
+            <select id="country" class="form-select" name="country">
+              <option value="AF">Afghanistan</option>
+              <option value="AL">Albania</option>
+              <option value="DZ">Algeria</option>
+              <option value="AO">Angola</option>
+              <option value="AR">Argentina</option>
+              <option value="AM">Armenia</option>
+              <option value="AU">Australia</option>
+              <option value="AT">Austria</option>
+              <option value="AZ">Azerbaijan</option>
+              <option value="BS">Bahamas</option>
+              <option value="BD">Bangladesh</option>
+              <option value="BY">Belarus</option>
+              <option value="BE">Belgium</option>
+              <option value="BZ">Belize</option>
+              <option value="BJ">Benin</option>
+              <option value="BT">Bhutan</option>
+              <option value="BO">Bolivia</option>
+              <option value="BA">Bosnia and Herz.</option>
+              <option value="BW">Botswana</option>
+              <option value="BR">Brazil</option>
+              <option value="BN">Brunei</option>
+              <option value="BG">Bulgaria</option>
+              <option value="BF">Burkina Faso</option>
+              <option value="BI">Burundi</option>
+              <option value="CI">Côte d'Ivoire</option>
+              <option value="KH">Cambodia</option>
+              <option value="CM">Cameroon</option>
+              <option value="CA">Canada</option>
+              <option value="CF">Central African Rep.</option>
+              <option value="TD">Chad</option>
+              <option value="CL">Chile</option>
+              <option value="CN">China</option>
+              <option value="CO">Colombia</option>
+              <option value="CG">Congo</option>
+              <option value="CR">Costa Rica</option>
+              <option value="HR">Croatia</option>
+              <option value="CU">Cuba</option>
+              <option value="CY">Cyprus</option>
+              <option value="CZ">Czech Rep.</option>
+              <option value="CD">Dem. Rep. Congo</option>
+              <option value="KP">Dem. Rep. Korea</option>
+              <option value="DK">Denmark</option>
+              <option value="DJ">Djibouti</option>
+              <option value="DO">Dominican Rep.</option>
+              <option value="EC">Ecuador</option>
+              <option value="EG">Egypt</option>
+              <option value="SV">El Salvador</option>
+              <option value="GQ">Eq. Guinea</option>
+              <option value="ER">Eritrea</option>
+              <option value="EE">Estonia</option>
+              <option value="ET">Ethiopia</option>
+              <option value="FK">Falkland Is.</option>
+              <option value="FJ">Fiji</option>
+              <option value="FI">Finland</option>
+              <option value="FR">France</option>
+              <option value="GA">Gabon</option>
+              <option value="GM">Gambia</option>
+              <option value="GE">Georgia</option>
+              <option value="DE">Germany</option>
+              <option value="GH">Ghana</option>
+              <option value="GR">Greece</option>
+              <option value="GL">Greenland</option>
+              <option value="GT">Guatemala</option>
+              <option value="GN">Guinea</option>
+              <option value="GW">Guinea-Bissau</option>
+              <option value="GY">Guyana</option>
+              <option value="HT">Haiti</option>
+              <option value="HN">Honduras</option>
+              <option value="HU">Hungary</option>
+              <option value="IS">Iceland</option>
+              <option value="IN">India</option>
+              <option value="ID">Indonesia</option>
+              <option value="IR">Iran</option>
+              <option value="IQ">Iraq</option>
+              <option value="IE">Ireland</option>
+              <option value="IL">Israel</option>
+              <option value="IT">Italy</option>
+              <option value="JM">Jamaica</option>
+              <option value="JP">Japan</option>
+              <option value="JO">Jordan</option>
+              <option value="KZ">Kazakhstan</option>
+              <option value="KE">Kenya</option>
+              <option value="KR">Korea</option>
+              <option value="XK">Kosovo</option>
+              <option value="KW">Kuwait</option>
+              <option value="KG">Kyrgyzstan</option>
+              <option value="LA">Lao PDR</option>
+              <option value="LV">Latvia</option>
+              <option value="LB">Lebanon</option>
+              <option value="LS">Lesotho</option>
+              <option value="LR">Liberia</option>
+              <option value="LY">Libya</option>
+              <option value="LT">Lithuania</option>
+              <option value="LU">Luxembourg</option>
+              <option value="MK">Macedonia</option>
+              <option value="MG">Madagascar</option>
+              <option value="MW">Malawi</option>
+              <option value="MY">Malaysia</option>
+              <option value="ML">Mali</option>
+              <option value="MR">Mauritania</option>
+              <option value="MX">Mexico</option>
+              <option value="MD">Moldova</option>
+              <option value="MN">Mongolia</option>
+              <option value="ME">Montenegro</option>
+              <option value="MA">Morocco</option>
+              <option value="MZ">Mozambique</option>
+              <option value="MM">Myanmar</option>
+              <option value="CP">N. Cyprus</option>
+              <option value="NA">Namibia</option>
+              <option value="NP">Nepal</option>
+              <option value="NL">Netherlands</option>
+              <option value="NC">New Caledonia</option>
+              <option value="NZ">New Zealand</option>
+              <option value="NI">Nicaragua</option>
+              <option value="NE">Niger</option>
+              <option value="NG">Nigeria</option>
+              <option value="NO">Norway</option>
+              <option value="OM">Oman</option>
+              <option value="PK">Pakistan</option>
+              <option value="PS">Palestine</option>
+              <option value="PA">Panama</option>
+              <option value="PG">Papua New Guinea</option>
+              <option value="PY">Paraguay</option>
+              <option value="PE">Peru</option>
+              <option value="PH">Philippines</option>
+              <option value="PL">Poland</option>
+              <option value="PT">Portugal</option>
+              <option value="PR">Puerto Rico</option>
+              <option value="QA">Qatar</option>
+              <option value="RO">Romania</option>
+              <option value="RU">Russia</option>
+              <option value="RW">Rwanda</option>
+              <option value="SS">S. Sudan</option>
+              <option value="SA">Saudi Arabia</option>
+              <option value="SN">Senegal</option>
+              <option value="RS">Serbia</option>
+              <option value="SL">Sierra Leone</option>
+              <option value="SK">Slovakia</option>
+              <option value="SI">Slovenia</option>
+              <option value="SB">Solomon Is.</option>
+              <option value="SO">Somalia</option>
+              <option value="SM">Somaliland</option>
+              <option value="ZA">South Africa</option>
+              <option value="ES">Spain</option>
+              <option value="LK">Sri Lanka</option>
+              <option value="SD">Sudan</option>
+              <option value="SR">Suriname</option>
+              <option value="SZ">Swaziland</option>
+              <option value="SE">Sweden</option>
+              <option value="CH">Switzerland</option>
+              <option value="SY">Syria</option>
+              <option value="TW">Taiwan</option>
+              <option value="TJ">Tajikistan</option>
+              <option value="TZ">Tanzania</option>
+              <option value="TH">Thailand</option>
+              <option value="TL">Timor-Leste</option>
+              <option value="TG">Togo</option>
+              <option value="TT">Trinidad and Tobago</option>
+              <option value="TN">Tunisia</option>
+              <option value="TR">Turkey</option>
+              <option value="TM">Turkmenistan</option>
+              <option value="UG">Uganda</option>
+              <option value="UA">Ukraine</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="GB">United Kingdom</option>
+              <option value="US" selected>United States</option>
+              <option value="UY">Uruguay</option>
+              <option value="UZ">Uzbekistan</option>
+              <option value="VU">Vanuatu</option>
+              <option value="VE">Venezuela</option>
+              <option value="VN">Vietnam</option>
+              <option value="EH">W. Sahara</option>
+              <option value="YE">Yemen</option>
+              <option value="ZM">Zambia</option>
+              <option value="ZW">Zimbabwe</option>
+            </select>
+          </form>
+          <button
+            id="info-button"
+            type="button"
+            class="btn btn-outline-info mx-1"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseInfo"
+            aria-expanded="false"
+            aria-controls="collapseInfo"
           >
-            <div class="accordion-body">
-              <table id="info">
-                <tbody>
-                  <tr>
-                    <td>
-                      <img id="info-flag" class="flag" src="" alt="flag" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td id="info1-name"></td>
-                    <td id="info1-value"></td>
-                  </tr>
-                  <tr>
-                    <td id="info2-name"></td>
-                    <td id="info2-value"></td>
-                  </tr>
-                  <tr>
-                    <td id="info3-name"></td>
-                    <td id="info3-value"></td>
-                  </tr>
-                  <tr>
-                    <td id="info4-name"></td>
-                    <td id="info4-value"></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+            Info
+          </button>
         </div>
+      </nav>
 
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingTwo">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseTwo"
-              aria-expanded="false"
-              aria-controls="collapseTwo"
-            >
-              Weather
-            </button>
-          </h2>
-          <div
-            id="collapseTwo"
-            class="accordion-collapse collapse"
-            aria-labelledby="headingTwo"
-            data-bs-parent="#accordionInfo"
-          >
-            <div class="accordion-body">
-              <table id="weather">
-                <thead>
-                  <tr>
-                    <th id="date1"></th>
-                    <th>
-                      <img id="icon1" class="icon" src="" alt="weather icon" />
-                    </th>
-                    <th id="temp1"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td id="date2"></td>
-                    <td>
-                      <img id="icon2" class="icon" src="" alt="weather icon" />
-                    </td>
-                    <td id="temp2"></td>
-                  </tr>
-                  <tr>
-                    <td id="date3"></td>
-                    <td>
-                      <img id="icon3" class="icon" src="" alt="weather icon" />
-                    </td>
-                    <td id="temp3"></td>
-                  </tr>
-                  <tr>
-                    <td id="date4"></td>
-                    <td>
-                      <img id="icon4" class="icon" src="" alt="weather icon" />
-                    </td>
-                    <td id="temp4"></td>
-                  </tr>
-                  <tr>
-                    <td id="date5"></td>
-                    <td>
-                      <img id="icon5" class="icon" src="" alt="weather icon" />
-                    </td>
-                    <td id="temp5"></td>
-                  </tr>
-                </tbody>
-              </table>
+      <div id="map" class="row">
+        <div class="column container collapse" id="collapseInfo">
+          <div class="accordion" id="accordionInfo">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  Info
+                </button>
+              </h2>
+              <div
+                id="collapseOne"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionInfo"
+              >
+                <div class="accordion-body">
+                  <table id="info">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <img id="info-flag" class="flag" src="" alt="flag" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td id="info1-name"></td>
+                        <td id="info1-value"></td>
+                      </tr>
+                      <tr>
+                        <td id="info2-name"></td>
+                        <td id="info2-value"></td>
+                      </tr>
+                      <tr>
+                        <td id="info3-name"></td>
+                        <td id="info3-value"></td>
+                      </tr>
+                      <tr>
+                        <td id="info4-name"></td>
+                        <td id="info4-value"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingThree">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseThree"
-              aria-expanded="false"
-              aria-controls="collapseThree"
-            >
-              Currency
-            </button>
-          </h2>
-          <div
-            id="collapseThree"
-            class="accordion-collapse collapse"
-            aria-labelledby="headingThree"
-            data-bs-parent="#accordionInfo"
-          >
-            <div class="accordion-body">
-              <table id="currency">
-                <thead>
-                  <tr>
-                    <th id="cur1-name"></th>
-                    <th id="cur1-value"></th>
-                    <th id="cur1-code"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td id="cur2-name"></td>
-                    <td id="cur2-value"></td>
-                    <td id="cur2-code"></td>
-                  </tr>
-                  <tr>
-                    <td id="cur3-name"></td>
-                    <td id="cur3-value"></td>
-                    <td id="cur3-code"></td>
-                  </tr>
-                  <tr>
-                    <td id="cur4-name"></td>
-                    <td id="cur4-value"></td>
-                    <td id="cur4-code"></td>
-                  </tr>
-                  <tr>
-                    <td id="cur5-name"></td>
-                    <td id="cur5-value"></td>
-                    <td id="cur5-code"></td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo"
+                >
+                  Weather
+                </button>
+              </h2>
+              <div
+                id="collapseTwo"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingTwo"
+                data-bs-parent="#accordionInfo"
+              >
+                <div class="accordion-body">
+                  <table id="weather">
+                    <thead>
+                      <tr>
+                        <th id="date1"></th>
+                        <th>
+                          <img
+                            id="icon1"
+                            class="icon"
+                            src=""
+                            alt="weather icon"
+                          />
+                        </th>
+                        <th id="temp1"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td id="date2"></td>
+                        <td>
+                          <img
+                            id="icon2"
+                            class="icon"
+                            src=""
+                            alt="weather icon"
+                          />
+                        </td>
+                        <td id="temp2"></td>
+                      </tr>
+                      <tr>
+                        <td id="date3"></td>
+                        <td>
+                          <img
+                            id="icon3"
+                            class="icon"
+                            src=""
+                            alt="weather icon"
+                          />
+                        </td>
+                        <td id="temp3"></td>
+                      </tr>
+                      <tr>
+                        <td id="date4"></td>
+                        <td>
+                          <img
+                            id="icon4"
+                            class="icon"
+                            src=""
+                            alt="weather icon"
+                          />
+                        </td>
+                        <td id="temp4"></td>
+                      </tr>
+                      <tr>
+                        <td id="date5"></td>
+                        <td>
+                          <img
+                            id="icon5"
+                            class="icon"
+                            src=""
+                            alt="weather icon"
+                          />
+                        </td>
+                        <td id="temp5"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingFour">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseFour"
-              aria-expanded="false"
-              aria-controls="collapseFour"
-            >
-              Wikipedia
-            </button>
-          </h2>
-          <div
-            id="collapseFour"
-            class="accordion-collapse collapse"
-            aria-labelledby="headingFour"
-            data-bs-parent="#accordionInfo"
-          >
-            <div class="accordion-body">
-              <table id="wiki">
-                <tbody>
-                  <tr>
-                    <td>
-                      <a id="wiki-link0" href="" target="_blank"></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <a id="wiki-link1" href="" target="_blank"></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <a id="wiki-link2" href="" target="_blank"></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <a id="wiki-link3" href="" target="_blank"></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <a id="wiki-link4" href="" target="_blank"></a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingThree">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseThree"
+                  aria-expanded="false"
+                  aria-controls="collapseThree"
+                >
+                  Currency
+                </button>
+              </h2>
+              <div
+                id="collapseThree"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingThree"
+                data-bs-parent="#accordionInfo"
+              >
+                <div class="accordion-body">
+                  <table id="currency">
+                    <thead>
+                      <tr>
+                        <th id="cur1-name"></th>
+                        <th id="cur1-value"></th>
+                        <th id="cur1-code"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td id="cur2-name"></td>
+                        <td id="cur2-value"></td>
+                        <td id="cur2-code"></td>
+                      </tr>
+                      <tr>
+                        <td id="cur3-name"></td>
+                        <td id="cur3-value"></td>
+                        <td id="cur3-code"></td>
+                      </tr>
+                      <tr>
+                        <td id="cur4-name"></td>
+                        <td id="cur4-value"></td>
+                        <td id="cur4-code"></td>
+                      </tr>
+                      <tr>
+                        <td id="cur5-name"></td>
+                        <td id="cur5-value"></td>
+                        <td id="cur5-code"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingFour">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseFour"
+                  aria-expanded="false"
+                  aria-controls="collapseFour"
+                >
+                  Wikipedia
+                </button>
+              </h2>
+              <div
+                id="collapseFour"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingFour"
+                data-bs-parent="#accordionInfo"
+              >
+                <div class="accordion-body">
+                  <table id="wiki">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <a id="wiki-link0" href="" target="_blank"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <a id="wiki-link1" href="" target="_blank"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <a id="wiki-link2" href="" target="_blank"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <a id="wiki-link3" href="" target="_blank"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <a id="wiki-link4" href="" target="_blank"></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
