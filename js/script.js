@@ -1,38 +1,15 @@
-let changed = false;
-let code = null;
+let map;
 let feature;
-const days = ["Sun", "Mon", "Tues", "Weds", "Thurs", "Fri", "Sat"];
-const currencies = {
-  USD: {
-    name: "US Dollar",
-  },
-  CAD: {
-    name: "Canadian Dollar",
-  },
-  EUR: {
-    name: "Euro",
-  },
-  GBP: {
-    name: "British Pound",
-  },
-  INR: {
-    name: "Indian Rupee",
-  },
-};
+let country;
+let changed = false;
 
 $(window).on("load", function () {
-  $.get(
-    "https://ipinfo.io",
-    function (data) {
-      code = data.country;
-      if (!changed) {
-        $("#country").val(code);
-        $("#country").trigger("change");
-      }
-    },
-    "jsonp"
-  );
+  preLoad();
+  loadMap();
+  getLocation();
+});
 
+function preLoad() {
   if ($("#preloader").length) {
     $("#preloader")
       .delay(100)
@@ -40,14 +17,30 @@ $(window).on("load", function () {
         $(this).remove();
       });
   }
-});
+}
 
-var map = L.map("map", {
-  minZoom: 1,
-  maxZoom: 10,
-}).setView([0, 0], 2);
+function loadMap() {
+  map = L.map("map", {
+    minZoom: 1,
+    maxZoom: 10,
+  }).setView([0, 0], 2);
 
-L.tileLayer.provider("Stamen.Watercolor").addTo(map);
+  L.tileLayer.provider("Stamen.Watercolor").addTo(map);
+}
+
+function getLocation() {
+  $.get(
+    "https://ipinfo.io",
+    function (data) {
+      country = data.country;
+      if (!changed) {
+        $("#country").val(country);
+        $("#country").trigger("change");
+      }
+    },
+    "jsonp"
+  );
+}
 
 function fnum(x) {
   if (isNaN(x)) return x;
@@ -113,6 +106,8 @@ function getOrdinalNum(n) {
 }
 
 function setWeather(data) {
+  const days = ["Sun", "Mon", "Tues", "Weds", "Thurs", "Fri", "Sat"];
+
   var date = new Date();
 
   var date1 = getOrdinalNum(date.getDate());
@@ -170,15 +165,34 @@ function setWeather(data) {
 }
 
 function setCurrency(result, currency) {
+  const currencies = {
+    USD: {
+      name: "US Dollar",
+    },
+    CAD: {
+      name: "Canadian Dollar",
+    },
+    EUR: {
+      name: "Euro",
+    },
+    GBP: {
+      name: "British Pound",
+    },
+    INR: {
+      name: "Indian Rupee",
+    },
+  };
+
   const code1 = currency.code;
   const code2 = code1 === "USD" ? "EUR" : "USD";
   const code3 = code1 === "GBP" ? "EUR" : "GBP";
   const code4 = code1 === "CAD" ? "EUR" : "CAD";
   const code5 = code1 === "INR" ? "EUR" : "INR";
 
-  currency.name.replace(/\b\w/g, (l) => l.toUpperCase());
-
-  const name1 = code1 in currencies ? currencies[code1].name : currency.name;
+  const name1 =
+    code1 in currencies
+      ? currencies[code1].name
+      : currency.name.replace(/\b\w/g, (l) => l.toUpperCase());
   const name2 = currencies[code2].name;
   const name3 = currencies[code3].name;
   const name4 = currencies[code4].name;
@@ -186,11 +200,11 @@ function setCurrency(result, currency) {
 
   const base = result.rates[code1];
 
-  const rate1 = "1.00";
-  const rate2 = (result.rates[code2] / base).toFixed(2);
-  const rate3 = (result.rates[code3] / base).toFixed(2);
-  const rate4 = (result.rates[code4] / base).toFixed(2);
-  const rate5 = (result.rates[code5] / base).toFixed(2);
+  const rate1 = "1.000";
+  const rate2 = (result.rates[code2] / base).toFixed(3);
+  const rate3 = (result.rates[code3] / base).toFixed(3);
+  const rate4 = (result.rates[code4] / base).toFixed(3);
+  const rate5 = (result.rates[code5] / base).toFixed(3);
 
   $("#cur1-name").text(name1);
   $("#cur1-value").text(rate1);
@@ -295,7 +309,6 @@ function requestWiki(name) {
   });
 }
 
-// Set and fly to bounds
 function setFeature(data) {
   if (feature) {
     feature.clearLayers();
@@ -308,7 +321,6 @@ function setFeature(data) {
   requestWeather(center);
 }
 
-// Get new coords from country
 $("#country").change(function () {
   changed = true;
   $.ajax({
