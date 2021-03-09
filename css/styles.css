@@ -28,6 +28,10 @@ tr,
   height: 40px;
 }
 
+.popup-image {
+  width: 100%;
+}
+
 #preloader {
   position: fixed;
   top: 0;
