@@ -6,6 +6,7 @@ let changed = false;
 $(window).on("load", function () {
   preLoad();
   loadMap();
+  loadSelect();
   getLocation();
 });
 
@@ -26,6 +27,32 @@ function loadMap() {
   }).setView([0, 0], 2);
 
   L.tileLayer.provider("Stamen.Watercolor").addTo(map);
+}
+
+function loadSelect() {
+  $.ajax({
+    url: "php/main.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      type: "select",
+    },
+    success: function (result) {
+      setSelect(result.select);
+    },
+
+    error: function (request, status, error) {},
+  });
+}
+
+function setSelect(select) {
+  $.each(select, function (i, o) {
+    $.each(o, function (k, v) {
+      var o = new Option(v, k);
+      $(o).html(v);
+      $("#country").append(o);
+    });
+  });
 }
 
 function getLocation() {
@@ -316,7 +343,7 @@ function setFeature(data) {
   feature = L.geoJson(data).addTo(map);
   var bounds = feature.getBounds();
   var center = bounds.getCenter();
-  map.flyToBounds(bounds, { duration: 2 });
+  map.fitBounds(bounds, { duration: 2 });
 
   requestWeather(center);
 }

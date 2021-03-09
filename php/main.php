@@ -15,6 +15,11 @@ function curlRequest($endpoint)
 }
 
 switch ($_REQUEST['type']) {
+    case 'select':
+        $file = file_get_contents('../data/select.json');
+        $select = json_decode($file, true);
+        $output['select'] = $select;
+        break;
     case 'feature':
         $country = $_REQUEST['country'];
         $file = file_get_contents('../data/borders/' . $country . '.json');
