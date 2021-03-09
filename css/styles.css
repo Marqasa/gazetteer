@@ -1,7 +1,6 @@
 html,
 body,
-#main,
-#map {
+#main {
   height: 100%;
 }
 
