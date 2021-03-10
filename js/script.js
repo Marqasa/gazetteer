@@ -7,6 +7,7 @@ let markerGroup;
 $(window).on("load", function () {
   preLoad();
   loadMap();
+  addPopupListener();
   loadSelect();
   getLocation();
 });
@@ -29,7 +30,9 @@ function loadMap() {
 
   L.tileLayer.provider("Stamen.Watercolor").addTo(map);
   markerGroup = L.layerGroup().addTo(map);
+}
 
+function addPopupListener() {
   document.querySelector(".leaflet-popup-pane").addEventListener(
     "load",
     function (event) {
@@ -247,9 +250,8 @@ function setFeature(data) {
 
 function setPlace(place, marker) {
   var popup = L.popup({
-    minWidth: 250,
-    maxWidth: 250,
-    maxHeight: 500,
+    maxWidth: 200,
+    maxHeight: 400,
     autoPanPadding: [50, 10],
     className: "popup",
   }).setContent(

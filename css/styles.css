@@ -41,13 +41,13 @@ tr,
   border: 0px solid white !important;
 }
 
-/* Works on Firefox */
+/* Scrollbar on Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: lightgray white;
 }
 
-/* Works on Chrome, Edge, and Safari */
+/* Scrollbar on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 5px;
 }
@@ -58,7 +58,7 @@ tr,
 
 *::-webkit-scrollbar-thumb {
   background-color: lightgray;
-  border-left: 2px solid white;
+  border-left: 3px solid white;
 }
 
 #preloader {
