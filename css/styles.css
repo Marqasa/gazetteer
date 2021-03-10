@@ -13,7 +13,7 @@ body,
 
 #accordionInfo {
   margin: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
@@ -28,8 +28,37 @@ tr,
   height: 40px;
 }
 
+.popup {
+  font-family: var(--bs-font-sans-serif) !important;
+  font-size: 14px !important;
+}
+
 .popup-image {
   width: 100%;
+}
+
+.leaflet-popup-scrolled {
+  border: 0px solid white !important;
+}
+
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: lightgray white;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: white;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: lightgray;
+  border-left: 2px solid white;
 }
 
 #preloader {

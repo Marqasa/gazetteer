@@ -41,7 +41,7 @@ switch ($_REQUEST['type']) {
         $lat_min = $_REQUEST['latMin'];
         $lat_max = $_REQUEST['latMax'];
         $api_key = "5ae2e3f221c38a28845f05b6dfcb929e3d59f12d3afce65a63819f9a";
-        $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lon_min . "&lon_max=" . $lon_max . "&lat_min=" . $lat_min . "&lat_max=" . $lat_max . "&kinds=" . $kinds . "&rate=1&limit=10&apikey=" . $api_key;
+        $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lon_min . "&lon_max=" . $lon_max . "&lat_min=" . $lat_min . "&lat_max=" . $lat_max . "&kinds=" . $kinds . "&limit=10&apikey=" . $api_key;
         $result = curlRequest($endpoint);
         $decode = json_decode($result, true);
         $output['places'] = $decode;

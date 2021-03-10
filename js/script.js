@@ -2,6 +2,7 @@ let map;
 let feature;
 let country;
 let changed = false;
+let markerGroup;
 
 $(window).on("load", function () {
   preLoad();
@@ -27,6 +28,21 @@ function loadMap() {
   }).setView([0, 0], 2);
 
   L.tileLayer.provider("Stamen.Watercolor").addTo(map);
+  markerGroup = L.layerGroup().addTo(map);
+
+  document.querySelector(".leaflet-popup-pane").addEventListener(
+    "load",
+    function (event) {
+      var tagName = event.target.tagName,
+        popup = map._popup;
+
+      if (tagName === "IMG" && popup && !popup._updated) {
+        popup._updated = true;
+        popup.update();
+      }
+    },
+    true
+  );
 }
 
 function loadSelect() {
@@ -90,7 +106,7 @@ function requestPlaces(bounds, kinds) {
       latMax: bounds._northEast.lat,
     },
     success: function (result) {
-      setPlaces(result.places);
+      setPlaces(result.places, kinds);
     },
 
     error: function (request, status, error) {},
@@ -233,15 +249,18 @@ function setPlace(place, marker) {
   var popup = L.popup({
     minWidth: 250,
     maxWidth: 250,
-    maxHeight: 250,
+    maxHeight: 500,
+    autoPanPadding: [50, 10],
+    className: "popup",
   }).setContent(
-    "<b>" +
-      place.name +
-      '</b><br><img class="popup-image" src="' +
+    '<img class="popup-image" src="' +
       place.preview.source +
       '" alt="' +
       place.name +
-      '"/><br>' +
+      '"/><br><br>' +
+      "<b>" +
+      place.name +
+      "</b>" +
       place.wikipedia_extracts.html +
       '<a href="' +
       place.wikipedia +
@@ -251,63 +270,75 @@ function setPlace(place, marker) {
   marker.bindPopup(popup).openPopup();
 }
 
-function setPlaces(places) {
+function setPlaces(places, kinds) {
   $.each(places.features, function (i, p) {
     let color = "white";
     let shape = "circle";
     let prefix = "";
     let icon = "";
 
-    if (p.properties.kinds.includes("architecture")) {
-      color = "brown";
-      shape = "square";
-      prefix = "fas";
-      icon = "fa-gopuram";
-    } else if (p.properties.kinds.includes("cultural")) {
-      color = "cyan";
-      shape = "penta";
-      prefix = "fas";
-      icon = "fa-users";
-    } else if (p.properties.kinds.includes("historic")) {
-      color = "orange";
-      prefix = "far";
-      icon = "fa-building";
-    } else if (p.properties.kinds.includes("industrial_facilities")) {
-      color = "yellow";
-      shape = "square";
-      prefix = "fas";
-      icon = "fa-history";
-    } else if (p.properties.kinds.includes("natural")) {
-      color = "green-dark";
-      prefix = "fab";
-      icon = "fa-canadian-maple-leaf";
-    } else if (p.properties.kinds.includes("religion")) {
-      color = "purple";
-      shape = "penta";
-      prefix = "fas";
-      icon = "fa-place-of-worship";
+    switch (kinds) {
+      case "architecture":
+        color = "brown";
+        shape = "square";
+        prefix = "fas";
+        icon = "fa-gopuram";
+        break;
+      case "cultural":
+        color = "cyan";
+        shape = "penta";
+        prefix = "fas";
+        icon = "fa-users";
+        break;
+      case "historic":
+        color = "orange";
+        prefix = "far";
+        icon = "fa-building";
+        break;
+      case "industrial_facilities":
+        color = "yellow";
+        shape = "square";
+        prefix = "fas";
+        icon = "fa-history";
+        break;
+      case "natural":
+        color = "green-dark";
+        prefix = "fab";
+        icon = "fa-canadian-maple-leaf";
+        break;
+      case "religion":
+        color = "purple";
+        shape = "penta";
+        prefix = "fas";
+        icon = "fa-place-of-worship";
+        break;
     }
 
-    var marker = L.ExtraMarkers.icon({
+    let markerIcon = L.ExtraMarkers.icon({
       prefix: prefix,
       icon: icon,
       shape: shape,
       markerColor: color,
     });
 
-    marker.placeId = p.properties.xid;
-    marker.placeRequested = false;
-
-    L.marker([p.geometry.coordinates[1], p.geometry.coordinates[0]], {
-      icon: marker,
-    })
+    let marker = L.marker(
+      [p.geometry.coordinates[1], p.geometry.coordinates[0]],
+      {
+        placeId: p.properties.xid,
+        placeRequested: false,
+        title: p.properties.name,
+        icon: markerIcon,
+      }
+    )
       .addTo(map)
       .on("click", function (e) {
-        if (!e.target.options.icon.placeRequested) {
-          e.target.options.icon.placeRequested = true;
-          requestPlace(e.target.options.icon.placeId, e.target);
+        if (!e.target.options.placeRequested) {
+          e.target.options.placeRequested = true;
+          requestPlace(e.target.options.placeId, e.target);
         }
       });
+
+    markerGroup.addLayer(marker);
   });
 }
 
@@ -474,6 +505,8 @@ function setInfo(info) {
 
 $("#country").change(function () {
   changed = true;
+  markerGroup.clearLayers();
+
   $.ajax({
     url: "php/main.php",
     type: "POST",
