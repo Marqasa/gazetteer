@@ -231,12 +231,10 @@ function getOrdinalNum(n) {
 }
 
 function setSelect(select) {
-  $.each(select, function (i, o) {
-    $.each(o, function (k, v) {
-      var o = new Option(v, k);
-      $(o).html(v);
-      $("#country").append(o);
-    });
+  $.each(select, function (k, v) {
+    var o = new Option(v, k);
+    $(o).html(v);
+    $("#country").append(o);
   });
 }
 

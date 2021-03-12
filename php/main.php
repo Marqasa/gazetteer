@@ -16,15 +16,29 @@ function curlRequest($endpoint)
 
 switch ($_REQUEST['type']) {
     case 'select':
-        $file = file_get_contents('../data/select.json');
-        $select = json_decode($file, true);
+        $file = file_get_contents('../data/countryBorders.geo.json');
+        $borders = json_decode($file, true);
+        $select = [];
+
+        foreach ($borders['features'] as $feature) {
+            $select[$feature['properties']['iso_a2']] = $feature['properties']['name'];
+        }
+
+        asort($select);
         $output['select'] = $select;
         break;
     case 'feature':
         $country = $_REQUEST['country'];
-        $file = file_get_contents('../data/borders/' . $country . '.json');
-        $feature = json_decode($file, true);
-        $output['feature'] = $feature;
+        $file = file_get_contents('../data/countryBorders.geo.json');
+        $borders = json_decode($file, true);
+
+        foreach ($borders['features'] as $feature) {
+            if ($feature['properties']['iso_a2'] == $country) {
+                $output['feature'] = $feature;
+                break;
+            }
+        }
+
         break;
     case 'place':
         $id = $_REQUEST['id'];
