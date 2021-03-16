@@ -28,6 +28,11 @@ tr,
   height: 40px;
 }
 
+th,
+td {
+  padding: 5px 10px;
+}
+
 .popup {
   font-family: var(--bs-font-sans-serif) !important;
   font-size: 14px !important;

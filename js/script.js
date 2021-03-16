@@ -178,6 +178,23 @@ function requestInfo(iso) {
   });
 }
 
+function requestNews(iso) {
+  $.ajax({
+    url: "php/main.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      type: "news",
+      iso: iso,
+    },
+    success: function (result) {
+      setNews(result.news);
+    },
+
+    error: function (request, status, error) {},
+  });
+}
+
 function requestWiki(name) {
   $.ajax({
     url: "php/main.php",
@@ -428,6 +445,58 @@ function setCurrency(result, currency) {
   $("#cur5-code").text(code5);
 }
 
+function setNews(news) {
+  let name1 = "News is not available for the selected country.";
+  let name2 = "";
+  let name3 = "";
+  let name4 = "";
+  let name5 = "";
+  let title1 = "";
+  let title2 = "";
+  let title3 = "";
+  let title4 = "";
+  let title5 = "";
+  let url1 = "";
+  let url2 = "";
+  let url3 = "";
+  let url4 = "";
+  let url5 = "";
+
+  if (news.totalResults >= 5) {
+    name1 = news.articles[0].source.name;
+    title1 = news.articles[0].title;
+    url1 = news.articles[0].url;
+    name2 = news.articles[1].source.name;
+    title2 = news.articles[1].title;
+    url2 = news.articles[1].url;
+    name3 = news.articles[2].source.name;
+    title3 = news.articles[2].title;
+    url3 = news.articles[2].url;
+    name4 = news.articles[3].source.name;
+    title4 = news.articles[3].title;
+    url4 = news.articles[3].url;
+    name5 = news.articles[4].source.name;
+    title5 = news.articles[4].title;
+    url5 = news.articles[4].url;
+  }
+
+  $("#news1-source").text(name1);
+  $("#news1-title").text(title1);
+  $("#news1-title").attr("href", url1);
+  $("#news2-source").text(name2);
+  $("#news2-title").text(title2);
+  $("#news2-title").attr("href", url2);
+  $("#news3-source").text(name3);
+  $("#news3-title").text(title3);
+  $("#news3-title").attr("href", url3);
+  $("#news4-source").text(name4);
+  $("#news4-title").text(title4);
+  $("#news4-title").attr("href", url4);
+  $("#news5-source").text(name5);
+  $("#news5-title").text(title5);
+  $("#news5-title").attr("href", url5);
+}
+
 function setWeather(data) {
   const days = ["Sun", "Mon", "Tues", "Weds", "Thurs", "Fri", "Sat"];
 
@@ -529,6 +598,7 @@ $("#country").change(function () {
     success: function (result) {
       setFeature(result.feature);
       requestInfo(result.feature.properties.iso_a2);
+      requestNews(result.feature.properties.iso_a2);
       requestWiki(result.feature.properties.name);
     },
 
