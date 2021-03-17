@@ -230,6 +230,23 @@ function requestWiki(name) {
   });
 }
 
+function requestWebcams(iso) {
+  $.ajax({
+    url: "php/main.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      type: "webcams",
+      iso: iso,
+    },
+    success: function (result) {
+      setWebcams(result.webcams);
+    },
+
+    error: function (request, status, error) {},
+  });
+}
+
 function fnum(x) {
   if (isNaN(x)) return x;
 
@@ -284,6 +301,7 @@ function setFeature(data) {
   var center = bounds.getCenter();
 
   requestWeather(center);
+  requestAirports(center);
 
   requestPlaces(bounds, "architecture");
   requestPlaces(bounds, "cultural");
@@ -292,29 +310,29 @@ function setFeature(data) {
   requestPlaces(bounds, "natural");
   requestPlaces(bounds, "religion");
 
-  let splitBounds = [];
-  let index = 0;
-  let northEastLat = bounds._northEast.lat;
-  let northEastLng = bounds._northEast.lng;
+  //   let splitBounds = [];
+  //   let index = 0;
+  //   let northEastLat = bounds._northEast.lat;
+  //   let northEastLng = bounds._northEast.lng;
 
-  while (northEastLat > bounds._southWest.lat) {
-    while (northEastLng > bounds._southWest.lng) {
-      const southWestLat = Math.max(northEastLat - 5, bounds._southWest.lat);
-      const southWestLng = Math.max(northEastLng - 5, bounds._southWest.lng);
-      const northEast = L.latLng(northEastLat, northEastLng);
-      const southWest = L.latLng(southWestLat, southWestLng);
-      splitBounds[index] = L.latLngBounds(northEast, southWest);
-      northEastLng -= 5;
-      index++;
-    }
+  //   while (northEastLat > bounds._southWest.lat) {
+  //     while (northEastLng > bounds._southWest.lng) {
+  //       const southWestLat = Math.max(northEastLat - 5, bounds._southWest.lat);
+  //       const southWestLng = Math.max(northEastLng - 5, bounds._southWest.lng);
+  //       const northEast = L.latLng(northEastLat, northEastLng);
+  //       const southWest = L.latLng(southWestLat, southWestLng);
+  //       splitBounds[index] = L.latLngBounds(northEast, southWest);
+  //       northEastLng -= 5;
+  //       index++;
+  //     }
 
-    northEastLng = bounds._northEast.lng;
-    northEastLat -= 5;
-  }
+  //     northEastLng = bounds._northEast.lng;
+  //     northEastLat -= 5;
+  //   }
 
-  $.each(splitBounds, function (i, b) {
-    requestAirports(b.getCenter());
-  });
+  //   $.each(splitBounds, function (i, b) {
+  //     requestAirports(b.getCenter());
+  //   });
 }
 
 function setPlace(place, marker) {
@@ -347,8 +365,6 @@ function setAirports(airports) {
       return;
     }
 
-    console.log(i);
-
     let markerIcon = L.ExtraMarkers.icon({
       prefix: "fas",
       icon: "fa-plane",
@@ -361,6 +377,64 @@ function setAirports(airports) {
       title: a.name,
       icon: markerIcon,
     }).addTo(map);
+
+    markerGroup.addLayer(marker);
+  });
+}
+
+function setWebcams(webcams) {
+  $.each(webcams.result.webcams, function (i, w) {
+    console.log(w);
+    let markerIcon = L.ExtraMarkers.icon({
+      prefix: "fas",
+      icon: "fa-video",
+      iconColor: "black",
+      shape: "circle",
+      markerColor: "white",
+    });
+
+    const video = w.player.live.available
+      ? w.player.live.embed
+      : w.player.day.available
+      ? w.player.day.embed
+      : w.player.month.available
+      ? w.player.month.embed
+      : w.player.year.available
+      ? w.player.year.embed
+      : w.player.lifetime.available
+      ? w.player.lifetime.embed
+      : "";
+
+    var popup = L.popup({
+      minWidth: 200,
+      maxWidth: 200,
+      maxHeight: 400,
+      autoPanPadding: [50, 10],
+      className: "popup",
+    }).setContent(
+      '<embed type="video/webm" src="' +
+        video +
+        '" width="200" height="200">' +
+        "<br><br>" +
+        "<b>" +
+        w.title +
+        "</b><br>" +
+        "<p>" +
+        w.location.city +
+        ", " +
+        w.location.region +
+        "</p>" +
+        '<a href="' +
+        w.location.wikipedia +
+        '" target="_blank">Wikipedia</a>'
+    );
+
+    let marker = L.marker([w.location.latitude, w.location.longitude], {
+      title: w.title,
+      icon: markerIcon,
+    })
+      .addTo(map)
+      .bindPopup(popup);
 
     markerGroup.addLayer(marker);
   });
@@ -668,6 +742,7 @@ $("#country").change(function () {
       country = result.feature.properties.iso_a2;
       setFeature(result.feature);
       requestInfo(country);
+      requestWebcams(country);
       requestNews(country);
       requestWiki(result.feature.properties.name);
     },

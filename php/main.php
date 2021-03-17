@@ -118,6 +118,14 @@ switch ($_REQUEST['type']) {
         $decode = json_decode($result, true);
         $output['info'] = $decode;
         break;
+    case 'webcams':
+        $iso = $_REQUEST['iso'];
+        $api_key = 'oDMHnb9KjCOwlV3YcIdJDBKWYsp4ra4L';
+        $endpoint = "https://api.windy.com/api/webcams/v2/list/country=" . $iso . "/orderby=popularity/limit=20?show=webcams:location,image,player&key=" . $api_key;
+        $result = curlRequest($endpoint);
+        $decode = json_decode($result, true);
+        $output['webcams'] = $decode;
+        break;
     case 'weather':
         $lat = $_REQUEST['lat'];
         $lng = $_REQUEST['lng'];
