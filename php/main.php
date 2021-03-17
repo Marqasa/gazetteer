@@ -39,21 +39,22 @@ function get_airport_token()
     return $data['access_token'];
 }
 
-function get_airports($lat, $lng, $token)
+function get_airports($iso)
 {
+    $token = "test_NIhpnvoFfBFSqaj-JcRevV9uEliiVKqa9-rsrcDb0i5";
+
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => "https://test.api.amadeus.com/v1/reference-data/locations/airports?latitude=" . $lat . "&longitude=" . $lng . "&radius=500&page%5Blimit%5D=10&page%5Boffset%5D=0&sort=relevance",
+        CURLOPT_URL => "https://api.duffel.com/air/airports?iata_country_code=" . $iso,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET",
         CURLOPT_HTTPHEADER => [
-            "authorization: Bearer " . $token,
-            "content-type: application/json"
+            "Accept-Encoding: gzip",
+            "Accept: application/json",
+            "Content-Type: application/json",
+            "Duffel-Version: beta",
+            "Authorization: Bearer " . $token,
         ],
     ]);
 
@@ -136,13 +137,8 @@ switch ($_REQUEST['type']) {
         $output['weather'] = $decode;
         break;
     case 'airports':
-        if ($airport_token == "") {
-            $airport_token = get_airport_token();
-        }
-
-        $lat = $_REQUEST['lat'];
-        $lng = $_REQUEST['lng'];
-        $output['airports'] = get_airports($lat, $lng, $airport_token);
+        $iso = $_REQUEST['iso'];
+        $output['airports'] = get_airports($iso);
         break;
     case 'currency':
         $app_id = "e3dcd947ba064c148ee3a7942d89329c";

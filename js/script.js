@@ -144,15 +144,14 @@ function requestWeather(center) {
   });
 }
 
-function requestAirports(center) {
+function requestAirports(iso) {
   $.ajax({
     url: "php/main.php",
     type: "POST",
     dataType: "json",
     data: {
       type: "airports",
-      lat: center.lat,
-      lng: center.lng,
+      iso: iso,
     },
     success: function (result) {
       setAirports(result.airports);
@@ -301,7 +300,6 @@ function setFeature(data) {
   var center = bounds.getCenter();
 
   requestWeather(center);
-  requestAirports(center);
 
   requestPlaces(bounds, "architecture");
   requestPlaces(bounds, "cultural");
@@ -309,30 +307,6 @@ function setFeature(data) {
   requestPlaces(bounds, "industrial_facilities");
   requestPlaces(bounds, "natural");
   requestPlaces(bounds, "religion");
-
-  //   let splitBounds = [];
-  //   let index = 0;
-  //   let northEastLat = bounds._northEast.lat;
-  //   let northEastLng = bounds._northEast.lng;
-
-  //   while (northEastLat > bounds._southWest.lat) {
-  //     while (northEastLng > bounds._southWest.lng) {
-  //       const southWestLat = Math.max(northEastLat - 5, bounds._southWest.lat);
-  //       const southWestLng = Math.max(northEastLng - 5, bounds._southWest.lng);
-  //       const northEast = L.latLng(northEastLat, northEastLng);
-  //       const southWest = L.latLng(southWestLat, southWestLng);
-  //       splitBounds[index] = L.latLngBounds(northEast, southWest);
-  //       northEastLng -= 5;
-  //       index++;
-  //     }
-
-  //     northEastLng = bounds._northEast.lng;
-  //     northEastLat -= 5;
-  //   }
-
-  //   $.each(splitBounds, function (i, b) {
-  //     requestAirports(b.getCenter());
-  //   });
 }
 
 function setPlace(place, marker) {
@@ -360,11 +334,8 @@ function setPlace(place, marker) {
 }
 
 function setAirports(airports) {
+  console.log(airports);
   $.each(airports.data, function (i, a) {
-    if (a.address.countryCode != country) {
-      return;
-    }
-
     let markerIcon = L.ExtraMarkers.icon({
       prefix: "fas",
       icon: "fa-plane",
@@ -373,7 +344,7 @@ function setAirports(airports) {
       markerColor: "black",
     });
 
-    let marker = L.marker([a.geoCode.latitude, a.geoCode.longitude], {
+    let marker = L.marker([a.latitude, a.longitude], {
       title: a.name,
       icon: markerIcon,
     }).addTo(map);
@@ -384,7 +355,6 @@ function setAirports(airports) {
 
 function setWebcams(webcams) {
   $.each(webcams.result.webcams, function (i, w) {
-    console.log(w);
     let markerIcon = L.ExtraMarkers.icon({
       prefix: "fas",
       icon: "fa-video",
@@ -741,6 +711,7 @@ $("#country").change(function () {
     success: function (result) {
       country = result.feature.properties.iso_a2;
       setFeature(result.feature);
+      requestAirports(country);
       requestInfo(country);
       requestWebcams(country);
       requestNews(country);
