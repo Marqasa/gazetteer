@@ -334,7 +334,6 @@ function setPlace(place, marker) {
 }
 
 function setAirports(airports) {
-  console.log(airports);
   $.each(airports.data, function (i, a) {
     let markerIcon = L.ExtraMarkers.icon({
       prefix: "fas",
@@ -347,7 +346,17 @@ function setAirports(airports) {
     let marker = L.marker([a.latitude, a.longitude], {
       title: a.name,
       icon: markerIcon,
-    }).addTo(map);
+    })
+      .addTo(map)
+      .on("click", function (e) {
+        var win = window.open(
+          "http://www.google.com/search?q=" + a.name,
+          "_blank"
+        );
+        if (win) {
+          win.focus();
+        }
+      });
 
     markerGroup.addLayer(marker);
   });
