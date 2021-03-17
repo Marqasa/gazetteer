@@ -1,6 +1,7 @@
 <?php
 
 $startTime = microtime(true) / 1000;
+$airport_token = "";
 $output;
 
 function curlRequest($endpoint)
@@ -12,6 +13,56 @@ function curlRequest($endpoint)
     $result = curl_exec($ch);
     curl_close($ch);
     return $result;
+}
+
+function get_airport_token()
+{
+    $ch = curl_init();
+
+    curl_setopt_array($ch, [
+        CURLOPT_URL => "https://test.api.amadeus.com/v1/security/oauth2/token",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => "grant_type=client_credentials&client_id=88ZSrkEGE2mr98GN24gMu880WjNEJGYI&client_secret=G4aEeVIVeH5gpXhs",
+        CURLOPT_HTTPHEADER => [
+            "content-type: application/x-www-form-urlencoded"
+        ],
+    ]);
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+    curl_close($ch);
+    return $data['access_token'];
+}
+
+function get_airports($lat, $lng, $token)
+{
+    $curl = curl_init();
+
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://test.api.amadeus.com/v1/reference-data/locations/airports?latitude=" . $lat . "&longitude=" . $lng . "&radius=500&page%5Blimit%5D=10&page%5Boffset%5D=0&sort=relevance",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => [
+            "authorization: Bearer " . $token,
+            "content-type: application/json"
+        ],
+    ]);
+
+    $response = curl_exec($curl);
+    $data = json_decode($response, true);
+
+    curl_close($curl);
+
+    return $data;
 }
 
 switch ($_REQUEST['type']) {
@@ -76,6 +127,15 @@ switch ($_REQUEST['type']) {
         $decode = json_decode($result, true);
         $output['weather'] = $decode;
         break;
+    case 'airports':
+        if ($airport_token == "") {
+            $airport_token = get_airport_token();
+        }
+
+        $lat = $_REQUEST['lat'];
+        $lng = $_REQUEST['lng'];
+        $output['airports'] = get_airports($lat, $lng, $airport_token);
+        break;
     case 'currency':
         $app_id = "e3dcd947ba064c148ee3a7942d89329c";
         $endpoint = 'https://openexchangerates.org/api/latest.json?app_id=' . $app_id;
@@ -102,37 +162,9 @@ switch ($_REQUEST['type']) {
         return;
 }
 
-// $iso = $feature['properties']['iso_a2'];
-// $endpoint = "https://restcountries.eu/rest/v2/alpha/" . $iso;
-
-// $ch1 = curl_init();
-// curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
-// curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-// curl_setopt($ch1, CURLOPT_URL, $endpoint);
-// $result1 = curl_exec($ch1);
-// curl_close($ch1);
-
-// $decode1 = json_decode($result1, true);
-
-// $capital = $decode1['capital'];
-// $weatherKey = 'a686f31ef51e4b3f3ed3a24cc811378d';
-// $weatherEndpoint = 'api.openweathermap.org/data/2.5/weather?q=' . $capital . '&units=metric&appid=' . $weatherKey;
-
-
-// $ch2 = curl_init();
-// curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
-// curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-// curl_setopt($ch2, CURLOPT_URL, $weatherEndpoint);
-// $result2 = curl_exec($ch2);
-// curl_close($ch2);
-
-// $decode2 = json_decode($result2, true);
-
 $output['status']['code'] = "200";
 $output['status']['name'] = "OK";
 $output['status']['returnedIn'] = (microtime(true) - $startTime) / 1000 . " ms";
-// $output['data'] = $decode1;
-// $output['weather'] = $decode2;
 
 header('Content-Type: application/json; charset=UTF-8');
 

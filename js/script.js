@@ -78,8 +78,8 @@ function getLocation() {
   $.get(
     "https://ipinfo.io",
     function (data) {
-      country = data.country;
       if (!changed) {
+        country = data.country;
         $("#country").val(country);
         $("#country").trigger("change");
       }
@@ -138,6 +138,24 @@ function requestWeather(center) {
     },
     success: function (result) {
       setWeather(result.weather);
+    },
+
+    error: function (request, status, error) {},
+  });
+}
+
+function requestAirports(center) {
+  $.ajax({
+    url: "php/main.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      type: "airports",
+      lat: center.lat,
+      lng: center.lng,
+    },
+    success: function (result) {
+      setAirports(result.airports);
     },
 
     error: function (request, status, error) {},
@@ -261,16 +279,42 @@ function setFeature(data) {
   }
   feature = L.geoJson(data).addTo(map);
   var bounds = feature.getBounds();
-  var center = bounds.getCenter();
   map.fitBounds(bounds, { duration: 2 });
 
+  var center = bounds.getCenter();
+
   requestWeather(center);
+
   requestPlaces(bounds, "architecture");
   requestPlaces(bounds, "cultural");
   requestPlaces(bounds, "historic");
   requestPlaces(bounds, "industrial_facilities");
   requestPlaces(bounds, "natural");
   requestPlaces(bounds, "religion");
+
+  let splitBounds = [];
+  let index = 0;
+  let northEastLat = bounds._northEast.lat;
+  let northEastLng = bounds._northEast.lng;
+
+  while (northEastLat > bounds._southWest.lat) {
+    while (northEastLng > bounds._southWest.lng) {
+      const southWestLat = Math.max(northEastLat - 5, bounds._southWest.lat);
+      const southWestLng = Math.max(northEastLng - 5, bounds._southWest.lng);
+      const northEast = L.latLng(northEastLat, northEastLng);
+      const southWest = L.latLng(southWestLat, southWestLng);
+      splitBounds[index] = L.latLngBounds(northEast, southWest);
+      northEastLng -= 5;
+      index++;
+    }
+
+    northEastLng = bounds._northEast.lng;
+    northEastLat -= 5;
+  }
+
+  $.each(splitBounds, function (i, b) {
+    requestAirports(b.getCenter());
+  });
 }
 
 function setPlace(place, marker) {
@@ -295,6 +339,31 @@ function setPlace(place, marker) {
   );
 
   marker.bindPopup(popup).openPopup();
+}
+
+function setAirports(airports) {
+  $.each(airports.data, function (i, a) {
+    if (a.address.countryCode != country) {
+      return;
+    }
+
+    console.log(i);
+
+    let markerIcon = L.ExtraMarkers.icon({
+      prefix: "fas",
+      icon: "fa-plane",
+      iconColor: "white",
+      shape: "circle",
+      markerColor: "black",
+    });
+
+    let marker = L.marker([a.geoCode.latitude, a.geoCode.longitude], {
+      title: a.name,
+      icon: markerIcon,
+    }).addTo(map);
+
+    markerGroup.addLayer(marker);
+  });
 }
 
 function setPlaces(places, kinds) {
@@ -596,9 +665,10 @@ $("#country").change(function () {
     },
 
     success: function (result) {
+      country = result.feature.properties.iso_a2;
       setFeature(result.feature);
-      requestInfo(result.feature.properties.iso_a2);
-      requestNews(result.feature.properties.iso_a2);
+      requestInfo(country);
+      requestNews(country);
       requestWiki(result.feature.properties.name);
     },
 
