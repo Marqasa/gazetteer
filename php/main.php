@@ -149,8 +149,10 @@ switch ($_REQUEST['type']) {
         break;
     case 'news':
         $api_key = '05d7dd167a6a42f48f770c5b2e2cf5b1';
-        $iso = $_REQUEST['iso'];
-        $endpoint = 'https://newsapi.org/v2/top-headlines?pageSize=5&country=' . $iso . '&apiKey=' . $api_key;
+        $query = urlEncode($_REQUEST['name']);
+        $dt2 = new DateTime("-1 month");
+        $date = $dt2->format("YY-MM-DD");
+        $endpoint = 'https://newsapi.org/v2/everything?sortBy=popularity&from=' . $date . '&qInTitle=' . $query . '&apiKey=' . $api_key;
         $result = curlRequest($endpoint);
         $decode = json_decode($result, true);
         $output['news'] = $decode;

@@ -4,10 +4,14 @@ body,
   height: 100%;
 }
 
+.collapse,
+.accordion {
+  z-index: 1000;
+}
+
 #collapseInfo {
   position: static;
   max-width: 80%;
-  z-index: 1000;
   font-size: 14px;
 }
 
@@ -16,6 +20,10 @@ body,
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
+}
+
+.accordion-body {
+  overflow-y: scroll;
 }
 
 table {
@@ -28,9 +36,26 @@ tr,
   height: 40px;
 }
 
+td h3 {
+  font-size: 0.8em;
+}
+td p {
+  font-size: 0.7em;
+}
+
 th,
 td {
-  padding: 5px 10px;
+  padding: 5px;
+}
+
+.td-img {
+  width: 50px;
+  height: 50px;
+}
+
+.news-img {
+  width: 100%;
+  height: 100%;
 }
 
 .popup {

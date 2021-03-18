@@ -195,14 +195,14 @@ function requestInfo(iso) {
   });
 }
 
-function requestNews(iso) {
+function requestNews(name) {
   $.ajax({
     url: "php/main.php",
     type: "POST",
     dataType: "json",
     data: {
       type: "news",
-      iso: iso,
+      name: name,
     },
     success: function (result) {
       setNews(result.news);
@@ -568,55 +568,52 @@ function setCurrency(result, currency) {
 }
 
 function setNews(news) {
-  let name1 = "News is not available for the selected country.";
-  let name2 = "";
-  let name3 = "";
-  let name4 = "";
-  let name5 = "";
-  let title1 = "";
-  let title2 = "";
-  let title3 = "";
-  let title4 = "";
-  let title5 = "";
-  let url1 = "";
-  let url2 = "";
-  let url3 = "";
-  let url4 = "";
-  let url5 = "";
+  console.log(news);
+  const title1 =
+    news.articles[0].title.length < 50
+      ? news.articles[0].title
+      : news.articles[0].title.substr(0, 50) + "...";
+  const title2 =
+    news.articles[1].title.length < 50
+      ? news.articles[1].title
+      : news.articles[1].title.substr(0, 50) + "...";
+  const title3 =
+    news.articles[2].title.length < 50
+      ? news.articles[2].title
+      : news.articles[2].title.substr(0, 50) + "...";
+  const title4 =
+    news.articles[3].title.length < 50
+      ? news.articles[3].title
+      : news.articles[3].title.substr(0, 50) + "...";
+  const title5 =
+    news.articles[4].title.length < 50
+      ? news.articles[4].title
+      : news.articles[4].title.substr(0, 50) + "...";
 
-  if (news.totalResults >= 5) {
-    name1 = news.articles[0].source.name;
-    title1 = news.articles[0].title;
-    url1 = news.articles[0].url;
-    name2 = news.articles[1].source.name;
-    title2 = news.articles[1].title;
-    url2 = news.articles[1].url;
-    name3 = news.articles[2].source.name;
-    title3 = news.articles[2].title;
-    url3 = news.articles[2].url;
-    name4 = news.articles[3].source.name;
-    title4 = news.articles[3].title;
-    url4 = news.articles[3].url;
-    name5 = news.articles[4].source.name;
-    title5 = news.articles[4].title;
-    url5 = news.articles[4].url;
-  }
-
-  $("#news1-source").text(name1);
   $("#news1-title").text(title1);
-  $("#news1-title").attr("href", url1);
-  $("#news2-source").text(name2);
+  $("#news1-src").text(news.articles[0].source.name);
+  $("#news1-img").attr("src", news.articles[0].urlToImage);
+  $(".news1-link").attr("href", news.articles[0].url);
+
   $("#news2-title").text(title2);
-  $("#news2-title").attr("href", url2);
-  $("#news3-source").text(name3);
+  $("#news2-src").text(news.articles[1].source.name);
+  $("#news2-img").attr("src", news.articles[1].urlToImage);
+  $(".news2-link").attr("href", news.articles[1].url);
+
   $("#news3-title").text(title3);
-  $("#news3-title").attr("href", url3);
-  $("#news4-source").text(name4);
+  $("#news3-src").text(news.articles[2].source.name);
+  $("#news3-img").attr("src", news.articles[2].urlToImage);
+  $(".news3-link").attr("href", news.articles[2].url);
+
   $("#news4-title").text(title4);
-  $("#news4-title").attr("href", url4);
-  $("#news5-source").text(name5);
+  $("#news4-src").text(news.articles[3].source.name);
+  $("#news4-img").attr("src", news.articles[3].urlToImage);
+  $(".news4-link").attr("href", news.articles[3].url);
+
   $("#news5-title").text(title5);
-  $("#news5-title").attr("href", url5);
+  $("#news5-src").text(news.articles[4].source.name);
+  $("#news5-img").attr("src", news.articles[4].urlToImage);
+  $(".news5-link").attr("href", news.articles[4].url);
 }
 
 function setWeather(data) {
@@ -723,7 +720,7 @@ $("#country").change(function () {
       requestAirports(country);
       requestInfo(country);
       requestWebcams(country);
-      requestNews(country);
+      requestNews(result.feature.properties.name);
       requestWiki(result.feature.properties.name);
     },
 
