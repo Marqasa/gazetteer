@@ -4,26 +4,16 @@ body,
   height: 100%;
 }
 
-.collapse,
-.accordion {
-  z-index: 1000;
-}
-
-#collapseInfo {
-  position: static;
-  max-width: 80%;
-  font-size: 14px;
+.modal-dialog {
+  margin: auto;
+  width: 80%;
+  top: 10%;
 }
 
 #accordionInfo {
-  margin: 10px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-}
-
-.accordion-body {
-  overflow-y: scroll;
 }
 
 table {
@@ -139,31 +129,31 @@ td {
 }
 
 @media (min-width: 576px) {
-  #collapseInfo {
+  .modal-dialog {
     max-width: 70%;
   }
 }
 
 @media (min-width: 768px) {
-  #collapseInfo {
+  .modal-dialog {
     max-width: 60%;
   }
 }
 
 @media (min-width: 992px) {
-  #collapseInfo {
+  .modal-dialog {
     max-width: 50%;
   }
 }
 
 @media (min-width: 1200px) {
-  #collapseInfo {
+  .modal-dialog {
     max-width: 40%;
   }
 }
 
 @media (min-width: 1400px) {
-  #collapseInfo {
+  .modal-dialog {
     max-width: 30%;
   }
 }

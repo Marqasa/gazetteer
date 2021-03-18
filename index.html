@@ -29,384 +29,402 @@
             id="info-button"
             type="button"
             class="btn btn-outline-info mx-1 my-1"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseInfo"
-            aria-expanded="false"
-            aria-controls="collapseInfo"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
           >
             Info
           </button>
         </div>
       </nav>
 
-      <div id="map" class="row flex-fill">
-        <div class="column container collapse" id="collapseInfo">
-          <div class="accordion" id="accordionInfo">
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                <button
-                  class="accordion-button"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
+      <!-- Map -->
+      <div id="map" class="row flex-fill"></div>
+
+      <!-- Preloader -->
+      <div id="preloader"></div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="accordion" id="accordionInfo">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button
+                    class="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
+                    Info
+                  </button>
+                </h2>
+                <div
+                  id="collapseOne"
+                  class="accordion-collapse collapse show"
+                  aria-labelledby="headingOne"
+                  data-bs-parent="#accordionInfo"
                 >
-                  Info
-                </button>
-              </h2>
-              <div
-                id="collapseOne"
-                class="accordion-collapse collapse show"
-                aria-labelledby="headingOne"
-                data-bs-parent="#accordionInfo"
-              >
-                <div class="accordion-body">
-                  <table id="info">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <img id="info-flag" class="flag" src="" alt="flag" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td id="info1-name"></td>
-                        <td id="info1-value"></td>
-                      </tr>
-                      <tr>
-                        <td id="info2-name"></td>
-                        <td id="info2-value"></td>
-                      </tr>
-                      <tr>
-                        <td id="info3-name"></td>
-                        <td id="info3-value"></td>
-                      </tr>
-                      <tr>
-                        <td id="info4-name"></td>
-                        <td id="info4-value"></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div class="accordion-body">
+                    <table id="info">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <img
+                              id="info-flag"
+                              class="flag"
+                              src=""
+                              alt="flag"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td id="info1-name"></td>
+                          <td id="info1-value"></td>
+                        </tr>
+                        <tr>
+                          <td id="info2-name"></td>
+                          <td id="info2-value"></td>
+                        </tr>
+                        <tr>
+                          <td id="info3-name"></td>
+                          <td id="info3-value"></td>
+                        </tr>
+                        <tr>
+                          <td id="info4-name"></td>
+                          <td id="info4-value"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingTwo">
-                <button
-                  class="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseTwo"
-                  aria-expanded="false"
-                  aria-controls="collapseTwo"
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    Weather
+                  </button>
+                </h2>
+                <div
+                  id="collapseTwo"
+                  class="accordion-collapse collapse"
+                  aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionInfo"
                 >
-                  Weather
-                </button>
-              </h2>
-              <div
-                id="collapseTwo"
-                class="accordion-collapse collapse"
-                aria-labelledby="headingTwo"
-                data-bs-parent="#accordionInfo"
-              >
-                <div class="accordion-body">
-                  <table id="weather">
-                    <thead>
-                      <tr>
-                        <th id="date1"></th>
-                        <th>
-                          <img
-                            id="icon1"
-                            class="icon"
-                            src=""
-                            alt="weather icon"
-                          />
-                        </th>
-                        <th id="temp1"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td id="date2"></td>
-                        <td>
-                          <img
-                            id="icon2"
-                            class="icon"
-                            src=""
-                            alt="weather icon"
-                          />
-                        </td>
-                        <td id="temp2"></td>
-                      </tr>
-                      <tr>
-                        <td id="date3"></td>
-                        <td>
-                          <img
-                            id="icon3"
-                            class="icon"
-                            src=""
-                            alt="weather icon"
-                          />
-                        </td>
-                        <td id="temp3"></td>
-                      </tr>
-                      <tr>
-                        <td id="date4"></td>
-                        <td>
-                          <img
-                            id="icon4"
-                            class="icon"
-                            src=""
-                            alt="weather icon"
-                          />
-                        </td>
-                        <td id="temp4"></td>
-                      </tr>
-                      <tr>
-                        <td id="date5"></td>
-                        <td>
-                          <img
-                            id="icon5"
-                            class="icon"
-                            src=""
-                            alt="weather icon"
-                          />
-                        </td>
-                        <td id="temp5"></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div class="accordion-body">
+                    <table id="weather">
+                      <thead>
+                        <tr>
+                          <th id="date1"></th>
+                          <th>
+                            <img
+                              id="icon1"
+                              class="icon"
+                              src=""
+                              alt="weather icon"
+                            />
+                          </th>
+                          <th id="temp1"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td id="date2"></td>
+                          <td>
+                            <img
+                              id="icon2"
+                              class="icon"
+                              src=""
+                              alt="weather icon"
+                            />
+                          </td>
+                          <td id="temp2"></td>
+                        </tr>
+                        <tr>
+                          <td id="date3"></td>
+                          <td>
+                            <img
+                              id="icon3"
+                              class="icon"
+                              src=""
+                              alt="weather icon"
+                            />
+                          </td>
+                          <td id="temp3"></td>
+                        </tr>
+                        <tr>
+                          <td id="date4"></td>
+                          <td>
+                            <img
+                              id="icon4"
+                              class="icon"
+                              src=""
+                              alt="weather icon"
+                            />
+                          </td>
+                          <td id="temp4"></td>
+                        </tr>
+                        <tr>
+                          <td id="date5"></td>
+                          <td>
+                            <img
+                              id="icon5"
+                              class="icon"
+                              src=""
+                              alt="weather icon"
+                            />
+                          </td>
+                          <td id="temp5"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingThree">
-                <button
-                  class="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseThree"
-                  aria-expanded="false"
-                  aria-controls="collapseThree"
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree"
+                    aria-expanded="false"
+                    aria-controls="collapseThree"
+                  >
+                    Currency
+                  </button>
+                </h2>
+                <div
+                  id="collapseThree"
+                  class="accordion-collapse collapse"
+                  aria-labelledby="headingThree"
+                  data-bs-parent="#accordionInfo"
                 >
-                  Currency
-                </button>
-              </h2>
-              <div
-                id="collapseThree"
-                class="accordion-collapse collapse"
-                aria-labelledby="headingThree"
-                data-bs-parent="#accordionInfo"
-              >
-                <div class="accordion-body">
-                  <table id="currency">
-                    <thead>
-                      <tr>
-                        <th id="cur1-name"></th>
-                        <th id="cur1-value"></th>
-                        <th id="cur1-code"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td id="cur2-name"></td>
-                        <td id="cur2-value"></td>
-                        <td id="cur2-code"></td>
-                      </tr>
-                      <tr>
-                        <td id="cur3-name"></td>
-                        <td id="cur3-value"></td>
-                        <td id="cur3-code"></td>
-                      </tr>
-                      <tr>
-                        <td id="cur4-name"></td>
-                        <td id="cur4-value"></td>
-                        <td id="cur4-code"></td>
-                      </tr>
-                      <tr>
-                        <td id="cur5-name"></td>
-                        <td id="cur5-value"></td>
-                        <td id="cur5-code"></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div class="accordion-body">
+                    <table id="currency">
+                      <thead>
+                        <tr>
+                          <th id="cur1-name"></th>
+                          <th id="cur1-value"></th>
+                          <th id="cur1-code"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td id="cur2-name"></td>
+                          <td id="cur2-value"></td>
+                          <td id="cur2-code"></td>
+                        </tr>
+                        <tr>
+                          <td id="cur3-name"></td>
+                          <td id="cur3-value"></td>
+                          <td id="cur3-code"></td>
+                        </tr>
+                        <tr>
+                          <td id="cur4-name"></td>
+                          <td id="cur4-value"></td>
+                          <td id="cur4-code"></td>
+                        </tr>
+                        <tr>
+                          <td id="cur5-name"></td>
+                          <td id="cur5-value"></td>
+                          <td id="cur5-code"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingFour">
-                <button
-                  class="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseFour"
-                  aria-expanded="false"
-                  aria-controls="collapseFour"
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseFour"
+                    aria-expanded="false"
+                    aria-controls="collapseFour"
+                  >
+                    News
+                  </button>
+                </h2>
+                <div
+                  id="collapseFour"
+                  class="accordion-collapse collapse"
+                  aria-labelledby="headingFour"
+                  data-bs-parent="#accordionInfo"
                 >
-                  News
-                </button>
-              </h2>
-              <div
-                id="collapseFour"
-                class="accordion-collapse collapse"
-                aria-labelledby="headingFour"
-                data-bs-parent="#accordionInfo"
-              >
-                <div class="accordion-body">
-                  <table id="news">
-                    <tbody>
-                      <tr id="news1-row">
-                        <td class="td-img">
-                          <a class="news1-link" href="" target="_blank">
-                            <img
-                              id="news1-img"
-                              class="news-img"
-                              src=""
-                              alt=""
-                            />
-                          </a>
-                        </td>
-                        <td>
-                          <a class="news1-link" href="" target="_blank">
-                            <h3 id="news1-title"></h3>
-                          </a>
-                          <p id="news1-src"></p>
-                        </td>
-                      </tr>
+                  <div class="accordion-body">
+                    <table id="news">
+                      <tbody>
+                        <tr id="news1-row">
+                          <td class="td-img">
+                            <a class="news1-link" href="" target="_blank">
+                              <img
+                                id="news1-img"
+                                class="news-img"
+                                src=""
+                                alt=""
+                              />
+                            </a>
+                          </td>
+                          <td>
+                            <a class="news1-link" href="" target="_blank">
+                              <h3 id="news1-title"></h3>
+                            </a>
+                            <p id="news1-src"></p>
+                          </td>
+                        </tr>
 
-                      <tr id="news2-row">
-                        <td class="td-img">
-                          <a class="news2-link" href="" target="_blank">
-                            <img
-                              id="news2-img"
-                              class="news-img"
-                              src=""
-                              alt=""
-                            />
-                          </a>
-                        </td>
-                        <td>
-                          <a class="news2-link" href="" target="_blank">
-                            <h3 id="news2-title"></h3>
-                          </a>
-                          <p id="news2-src"></p>
-                        </td>
-                      </tr>
+                        <tr id="news2-row">
+                          <td class="td-img">
+                            <a class="news2-link" href="" target="_blank">
+                              <img
+                                id="news2-img"
+                                class="news-img"
+                                src=""
+                                alt=""
+                              />
+                            </a>
+                          </td>
+                          <td>
+                            <a class="news2-link" href="" target="_blank">
+                              <h3 id="news2-title"></h3>
+                            </a>
+                            <p id="news2-src"></p>
+                          </td>
+                        </tr>
 
-                      <tr id="news3-row">
-                        <td class="td-img">
-                          <a class="news3-link" href="" target="_blank">
-                            <img
-                              id="news3-img"
-                              class="news-img"
-                              src=""
-                              alt=""
-                            />
-                          </a>
-                        </td>
-                        <td>
-                          <a class="news3-link" href="" target="_blank">
-                            <h3 id="news3-title"></h3>
-                          </a>
-                          <p id="news3-src"></p>
-                        </td>
-                      </tr>
+                        <tr id="news3-row">
+                          <td class="td-img">
+                            <a class="news3-link" href="" target="_blank">
+                              <img
+                                id="news3-img"
+                                class="news-img"
+                                src=""
+                                alt=""
+                              />
+                            </a>
+                          </td>
+                          <td>
+                            <a class="news3-link" href="" target="_blank">
+                              <h3 id="news3-title"></h3>
+                            </a>
+                            <p id="news3-src"></p>
+                          </td>
+                        </tr>
 
-                      <tr id="news4-row">
-                        <td class="td-img">
-                          <a class="news4-link" href="" target="_blank">
-                            <img
-                              id="news4-img"
-                              class="news-img"
-                              src=""
-                              alt=""
-                            />
-                          </a>
-                        </td>
-                        <td>
-                          <a class="news4-link" href="" target="_blank">
-                            <h3 id="news4-title"></h3>
-                          </a>
-                          <p id="news4-src"></p>
-                        </td>
-                      </tr>
+                        <tr id="news4-row">
+                          <td class="td-img">
+                            <a class="news4-link" href="" target="_blank">
+                              <img
+                                id="news4-img"
+                                class="news-img"
+                                src=""
+                                alt=""
+                              />
+                            </a>
+                          </td>
+                          <td>
+                            <a class="news4-link" href="" target="_blank">
+                              <h3 id="news4-title"></h3>
+                            </a>
+                            <p id="news4-src"></p>
+                          </td>
+                        </tr>
 
-                      <tr id="news5-row">
-                        <td class="td-img">
-                          <a class="news5-link" href="" target="_blank">
-                            <img
-                              id="news5-img"
-                              class="news-img"
-                              src=""
-                              alt=""
-                            />
-                          </a>
-                        </td>
-                        <td>
-                          <a class="news5-link" href="" target="_blank">
-                            <h3 id="news5-title"></h3>
-                          </a>
-                          <p id="news5-src"></p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                        <tr id="news5-row">
+                          <td class="td-img">
+                            <a class="news5-link" href="" target="_blank">
+                              <img
+                                id="news5-img"
+                                class="news-img"
+                                src=""
+                                alt=""
+                              />
+                            </a>
+                          </td>
+                          <td>
+                            <a class="news5-link" href="" target="_blank">
+                              <h3 id="news5-title"></h3>
+                            </a>
+                            <p id="news5-src"></p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingFive">
-                <button
-                  class="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseFive"
-                  aria-expanded="false"
-                  aria-controls="collapseFive"
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseFive"
+                    aria-expanded="false"
+                    aria-controls="collapseFive"
+                  >
+                    Wikipedia
+                  </button>
+                </h2>
+                <div
+                  id="collapseFive"
+                  class="accordion-collapse collapse"
+                  aria-labelledby="headingFive"
+                  data-bs-parent="#accordionInfo"
                 >
-                  Wikipedia
-                </button>
-              </h2>
-              <div
-                id="collapseFive"
-                class="accordion-collapse collapse"
-                aria-labelledby="headingFive"
-                data-bs-parent="#accordionInfo"
-              >
-                <div class="accordion-body">
-                  <table id="wiki">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <a id="wiki-link0" href="" target="_blank"></a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <a id="wiki-link1" href="" target="_blank"></a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <a id="wiki-link2" href="" target="_blank"></a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <a id="wiki-link3" href="" target="_blank"></a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <a id="wiki-link4" href="" target="_blank"></a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div class="accordion-body">
+                    <table id="wiki">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <a id="wiki-link0" href="" target="_blank"></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <a id="wiki-link1" href="" target="_blank"></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <a id="wiki-link2" href="" target="_blank"></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <a id="wiki-link3" href="" target="_blank"></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <a id="wiki-link4" href="" target="_blank"></a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -414,8 +432,6 @@
         </div>
       </div>
     </div>
-
-    <div id="preloader"></div>
 
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="vendor/leaflet/leaflet.js"></script>

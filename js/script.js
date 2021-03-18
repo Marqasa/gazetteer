@@ -568,7 +568,6 @@ function setCurrency(result, currency) {
 }
 
 function setNews(news) {
-  console.log(news);
   const title1 =
     news.articles[0].title.length < 50
       ? news.articles[0].title
