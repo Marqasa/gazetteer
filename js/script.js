@@ -589,29 +589,45 @@ function setNews(news) {
       ? news.articles[4].title
       : news.articles[4].title.substr(0, 50) + "...";
 
+  const img1 = news.articles[0].urlToImage
+    ? news.articles[0].urlToImage
+    : "https://s1.reutersmedia.net/resources_v2/images/rcom-default.png?w=800";
+  const img2 = news.articles[1].urlToImage
+    ? news.articles[1].urlToImage
+    : "https://s1.reutersmedia.net/resources_v2/images/rcom-default.png?w=800";
+  const img3 = news.articles[2].urlToImage
+    ? news.articles[2].urlToImage
+    : "https://s1.reutersmedia.net/resources_v2/images/rcom-default.png?w=800";
+  const img4 = news.articles[3].urlToImage
+    ? news.articles[3].urlToImage
+    : "https://s1.reutersmedia.net/resources_v2/images/rcom-default.png?w=800";
+  const img5 = news.articles[4].urlToImage
+    ? news.articles[4].urlToImage
+    : "https://s1.reutersmedia.net/resources_v2/images/rcom-default.png?w=800";
+
   $("#news1-title").text(title1);
   $("#news1-src").text(news.articles[0].source.name);
-  $("#news1-img").attr("src", news.articles[0].urlToImage);
+  $("#news1-img").attr("src", img1);
   $(".news1-link").attr("href", news.articles[0].url);
 
   $("#news2-title").text(title2);
   $("#news2-src").text(news.articles[1].source.name);
-  $("#news2-img").attr("src", news.articles[1].urlToImage);
+  $("#news2-img").attr("src", img2);
   $(".news2-link").attr("href", news.articles[1].url);
 
   $("#news3-title").text(title3);
   $("#news3-src").text(news.articles[2].source.name);
-  $("#news3-img").attr("src", news.articles[2].urlToImage);
+  $("#news3-img").attr("src", img3);
   $(".news3-link").attr("href", news.articles[2].url);
 
   $("#news4-title").text(title4);
   $("#news4-src").text(news.articles[3].source.name);
-  $("#news4-img").attr("src", news.articles[3].urlToImage);
+  $("#news4-img").attr("src", img4);
   $(".news4-link").attr("href", news.articles[3].url);
 
   $("#news5-title").text(title5);
   $("#news5-src").text(news.articles[4].source.name);
-  $("#news5-img").attr("src", news.articles[4].urlToImage);
+  $("#news5-img").attr("src", img5);
   $(".news5-link").attr("href", news.articles[4].url);
 }
 
