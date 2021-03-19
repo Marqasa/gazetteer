@@ -24,6 +24,7 @@ function preLoad() {
 
 function loadMap() {
   map = L.map("map", {
+    tap: false,
     minZoom: 1,
     maxZoom: 16,
   }).setView([0, 0], 2);
@@ -310,25 +311,27 @@ function setFeature(data) {
 }
 
 function setPlace(place, marker) {
+  const preview = place.preview
+    ? '<p><img class="popup-image" src="' +
+      place.preview.source +
+      '" alt="' +
+      place.name +
+      '"/></p>'
+    : "";
+  const name = "<p><b>" + place.name + "</b></p>";
+  const extracts = place.wikipedia_extracts
+    ? place.wikipedia_extracts.html
+    : "";
+  const wiki = place.wikipedia
+    ? '<p><a href="' + place.wikipedia + '" target="_blank">Wikipedia</a></p>'
+    : "";
+
   var popup = L.popup({
     maxWidth: 200,
     maxHeight: 400,
     autoPanPadding: [50, 10],
     className: "popup",
-  }).setContent(
-    '<img class="popup-image" src="' +
-      place.preview.source +
-      '" alt="' +
-      place.name +
-      '"/><br><br>' +
-      "<b>" +
-      place.name +
-      "</b>" +
-      place.wikipedia_extracts.html +
-      '<a href="' +
-      place.wikipedia +
-      '" target="_blank">Wikipedia</a>'
-  );
+  }).setContent(preview + name + extracts + wiki);
 
   marker.bindPopup(popup).openPopup();
 }
@@ -391,9 +394,10 @@ function setWebcams(webcams) {
       autoPanPadding: [50, 10],
       className: "popup",
     }).setContent(
-      '<embed type="video/webm" src="' +
+      '<iframe src="' +
         video +
         '" width="200" height="200">' +
+        "</iframe>" +
         "<br><br>" +
         "<b>" +
         w.title +
