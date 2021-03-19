@@ -15,30 +15,6 @@ function curlRequest($endpoint)
     return $result;
 }
 
-function get_airport_token()
-{
-    $ch = curl_init();
-
-    curl_setopt_array($ch, [
-        CURLOPT_URL => "https://test.api.amadeus.com/v1/security/oauth2/token",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => "grant_type=client_credentials&client_id=88ZSrkEGE2mr98GN24gMu880WjNEJGYI&client_secret=G4aEeVIVeH5gpXhs",
-        CURLOPT_HTTPHEADER => [
-            "content-type: application/x-www-form-urlencoded"
-        ],
-    ]);
-
-    $response = curl_exec($ch);
-    $data = json_decode($response, true);
-    curl_close($ch);
-    return $data['access_token'];
-}
-
 function get_airports($iso)
 {
     $token = "test_NIhpnvoFfBFSqaj-JcRevV9uEliiVKqa9-rsrcDb0i5";
@@ -107,7 +83,7 @@ switch ($_REQUEST['type']) {
         $lat_min = $_REQUEST['latMin'];
         $lat_max = $_REQUEST['latMax'];
         $api_key = "5ae2e3f221c38a28845f05b6dfcb929e3d59f12d3afce65a63819f9a";
-        $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lon_min . "&lon_max=" . $lon_max . "&lat_min=" . $lat_min . "&lat_max=" . $lat_max . "&kinds=" . $kinds . "&limit=20&apikey=" . $api_key;
+        $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lon_min . "&lon_max=" . $lon_max . "&lat_min=" . $lat_min . "&lat_max=" . $lat_max . "&kinds=" . $kinds . "&limit=25&apikey=" . $api_key;
         $result = curlRequest($endpoint);
         $decode = json_decode($result, true);
         $output['places'] = $decode;
@@ -122,7 +98,7 @@ switch ($_REQUEST['type']) {
     case 'webcams':
         $iso = $_REQUEST['iso'];
         $api_key = 'oDMHnb9KjCOwlV3YcIdJDBKWYsp4ra4L';
-        $endpoint = "https://api.windy.com/api/webcams/v2/list/country=" . $iso . "/orderby=popularity/limit=30?show=webcams:location,image,player&key=" . $api_key;
+        $endpoint = "https://api.windy.com/api/webcams/v2/list/country=" . $iso . "/orderby=popularity/limit=50?show=webcams:location,image,player&key=" . $api_key;
         $result = curlRequest($endpoint);
         $decode = json_decode($result, true);
         $output['webcams'] = $decode;

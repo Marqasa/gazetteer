@@ -1,5 +1,6 @@
 let map;
 let feature;
+let polygons;
 let country;
 let changed = false;
 let markerGroup;
@@ -294,6 +295,7 @@ function setFeature(data) {
   if (feature) {
     feature.clearLayers();
   }
+  polygons = data.geometry.coordinates;
   feature = L.geoJson(data).addTo(map);
   var bounds = feature.getBounds();
   map.fitBounds(bounds);
@@ -338,6 +340,10 @@ function setPlace(place, marker) {
 
 function setAirports(airports) {
   $.each(airports.data, function (i, a) {
+    if (!pointInPolygons([a.longitude, a.latitude])) {
+      return;
+    }
+
     let markerIcon = L.ExtraMarkers.icon({
       prefix: "fas",
       icon: "fa-plane",
@@ -367,6 +373,10 @@ function setAirports(airports) {
 
 function setWebcams(webcams) {
   $.each(webcams.result.webcams, function (i, w) {
+    if (!pointInPolygons([w.location.longitude, w.location.latitude])) {
+      return;
+    }
+
     let markerIcon = L.ExtraMarkers.icon({
       prefix: "fas",
       icon: "fa-video",
@@ -423,8 +433,51 @@ function setWebcams(webcams) {
   });
 }
 
+function pointInPolygonNested(point, vs, start, end) {
+  var x = point[0],
+    y = point[1];
+  var inside = false;
+  if (start === undefined) start = 0;
+  if (end === undefined) end = vs.length;
+  var len = end - start;
+  for (var i = 0, j = len - 1; i < len; j = i++) {
+    var xi = vs[i + start][0],
+      yi = vs[i + start][1];
+    var xj = vs[j + start][0],
+      yj = vs[j + start][1];
+    var intersect =
+      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInPolygons(point) {
+  let inside = false;
+
+  if (polygons.length > 1) {
+    $.each(polygons, function (i, poly) {
+      if (inside) {
+        return false;
+      }
+
+      inside = pointInPolygonNested(point, poly[0]);
+    });
+  } else {
+    inside = pointInPolygonNested(point, polygons[0]);
+  }
+
+  return inside;
+}
+
 function setPlaces(places, kinds) {
   $.each(places.features, function (i, p) {
+    if (
+      !pointInPolygons([p.geometry.coordinates[0], p.geometry.coordinates[1]])
+    ) {
+      return;
+    }
+
     let color = "white";
     let shape = "circle";
     let prefix = "";
