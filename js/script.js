@@ -296,7 +296,7 @@ function setFeature(data) {
   }
   feature = L.geoJson(data).addTo(map);
   var bounds = feature.getBounds();
-  map.fitBounds(bounds, { duration: 2 });
+  map.fitBounds(bounds);
 
   var center = bounds.getCenter();
 
@@ -396,7 +396,7 @@ function setWebcams(webcams) {
     }).setContent(
       '<iframe src="' +
         video +
-        '" width="200" height="200">' +
+        '" width="200" height="200" allow="fullscreen">' +
         "</iframe>" +
         "<br><br>" +
         "<b>" +
