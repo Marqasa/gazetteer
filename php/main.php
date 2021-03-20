@@ -90,10 +90,10 @@ function get_webcams($iso)
     return get_handle($endpoint);
 }
 
-function get_places($lonMin, $lonMax, $latMin, $latMax, $kind)
+function get_places($lonMin, $lonMax, $latMin, $latMax)
 {
     $api_key = "5ae2e3f221c38a28845f05b6dfcb929e3d59f12d3afce65a63819f9a";
-    $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lonMin . "&lon_max=" . $lonMax . "&lat_min=" . $latMin . "&lat_max=" . $latMax . "&kinds=" . $kind . "&limit=25&apikey=" . $api_key;
+    $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lonMin . "&lon_max=" . $lonMax . "&lat_min=" . $latMin . "&lat_max=" . $latMax . "&limit=200&apikey=" . $api_key;
     return get_handle($endpoint);
 }
 
@@ -134,53 +134,75 @@ switch ($_REQUEST['type']) {
         $latMax = $_REQUEST['latMax'];
 
         // Info
-        $handles = array();
-        array_push($handles, get_info($iso));
-        array_push($handles, get_weather($lat, $lng));
-        array_push($handles, get_currency());
-        array_push($handles, get_news($name));
-        array_push($handles, get_wiki($name));
+        $info_handles = array();
+        array_push($info_handles, get_info($iso));
+        array_push($info_handles, get_weather($lat, $lng));
+        array_push($info_handles, get_currency());
+        array_push($info_handles, get_news($name));
+        array_push($info_handles, get_wiki($name));
 
         // Markers
-        array_push($handles, get_airports($iso));
-        array_push($handles, get_webcams($iso));
-        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "architecture"));
-        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "cultural"));
-        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "historic"));
-        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "industrial_facilities"));
-        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "natural"));
-        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "religion"));
+        $marker_handles = array();
+        array_push($marker_handles, get_airports($iso));
+        array_push($marker_handles, get_webcams($iso));
+        array_push($marker_handles, get_places($lonMin, $lonMax, $latMin, $latMax));
 
-        // Build multi-handle
-        $mh = curl_multi_init();
-        foreach ($handles as $ch) {
-            curl_multi_add_handle($mh, $ch);
+        // Build multi-handles
+        $info_multi = curl_multi_init();
+        $marker_multi = curl_multi_init();
+
+        foreach ($info_handles as $ih) {
+            curl_multi_add_handle($info_multi, $ih);
         }
 
-        // Execute
-        $running = null;
+        foreach ($marker_handles as $mh) {
+            curl_multi_add_handle($marker_multi, $mh);
+        }
+
+        // Execute handles
         do {
-            curl_multi_exec($mh, $running);
-        } while ($running);
+            curl_multi_exec($info_multi, $running);
+            curl_multi_select($info_multi);
+        } while ($running > 0);
+
+        do {
+            curl_multi_exec($marker_multi, $running);
+            curl_multi_select($marker_multi);
+        } while ($running > 0);
 
         // Get results and remove handles
-        $results = array();
-        foreach ($handles as $ch) {
-            array_push($results, curl_multi_getcontent($ch));
-            curl_multi_remove_handle($mh, $ch);
+        $info_results = array();
+        $marker_results = array();
+
+        foreach ($info_handles as $ih) {
+            array_push($info_results, curl_multi_getcontent($ih));
+            curl_multi_remove_handle($info_multi, $ih);
         }
 
-        // Close multi-handle
-        curl_multi_close($mh);
+        foreach ($marker_handles as $mh) {
+            array_push($marker_results, curl_multi_getcontent($mh));
+            curl_multi_remove_handle($marker_multi, $mh);
+        }
+
+        // Close multi-handles
+        curl_multi_close($info_multi);
+        curl_multi_close($marker_multi);
 
         // Decode results
-        $data = array();
-        foreach ($results as $result) {
-            array_push($data, json_decode($result, true));
+        $info = array();
+        $markers = array();
+
+        foreach ($info_results as $ir) {
+            array_push($info, json_decode($ir, true));
+        }
+
+        foreach ($marker_results as $mr) {
+            array_push($markers, json_decode($mr, true));
         }
 
         // Output data
-        $output['data'] = $data;
+        $output['info'] = $info;
+        $output['markers'] = $markers;
         break;
     case 'place':
         $xid = $_REQUEST['xid'];

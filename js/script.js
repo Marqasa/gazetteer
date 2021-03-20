@@ -189,8 +189,7 @@ function setFeature(result) {
     latMax: bounds._northEast.lat,
   };
   const success = function (result) {
-    console.log(result);
-    $.each(result.data, function (i, o) {
+    $.each(result.info, function (i, o) {
       if (o == null) return;
       if (o.capital) {
         setInfo(o);
@@ -202,7 +201,11 @@ function setFeature(result) {
         setNews(o);
       } else if (o.geonames) {
         setWiki(o);
-      } else if (o.meta) {
+      }
+    });
+    $.each(result.markers, function (i, o) {
+      if (o == null) return;
+      if (o.meta) {
         setAirports(o);
       } else if (o.result) {
         setWebcams(o);
