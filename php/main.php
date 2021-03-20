@@ -15,13 +15,59 @@ function curlRequest($endpoint)
     return $result;
 }
 
+function get_handle($endpoint)
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_URL, $endpoint);
+    return $ch;
+}
+
+// Info
+function get_info($iso)
+{
+    $endpoint = "https://restcountries.eu/rest/v2/alpha/" . $iso;
+    return get_handle($endpoint);
+}
+
+function get_weather($lat, $lng)
+{
+    $appid = 'a686f31ef51e4b3f3ed3a24cc811378d';
+    $endpoint = 'https://api.openweathermap.org/data/2.5/onecall?lat=' . $lat . '&lon=' . $lng . '&exclude=minutely,hourly,alerts&units=metric&appid=' . $appid;
+    return get_handle($endpoint);
+}
+
+function get_currency()
+{
+    $app_id = "e3dcd947ba064c148ee3a7942d89329c";
+    $endpoint = 'https://openexchangerates.org/api/latest.json?app_id=' . $app_id;
+    return get_handle($endpoint);
+}
+
+function get_news($name)
+{
+    $api_key = '05d7dd167a6a42f48f770c5b2e2cf5b1';
+    $date = new DateTime("-1 month");
+    $fdate = $date->format("YY-MM-DD");
+    $endpoint = 'https://newsapi.org/v2/everything?from=' . $fdate . '&qInTitle=' . $name . '&sortBy=popularity&apiKey=' . $api_key;
+    return get_handle($endpoint);
+}
+
+function get_wiki($name)
+{
+    $endpoint = 'http://api.geonames.org/wikipediaSearchJSON?q=' . $name . '&maxRows=5&username=marqasa';
+    return get_handle($endpoint);
+}
+
+// Markers
 function get_airports($iso)
 {
     $token = "test_NIhpnvoFfBFSqaj-JcRevV9uEliiVKqa9-rsrcDb0i5";
 
-    $curl = curl_init();
+    $ch = curl_init();
 
-    curl_setopt_array($curl, [
+    curl_setopt_array($ch, [
         CURLOPT_URL => "https://api.duffel.com/air/airports?iata_country_code=" . $iso,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
@@ -34,12 +80,28 @@ function get_airports($iso)
         ],
     ]);
 
-    $response = curl_exec($curl);
-    $data = json_decode($response, true);
+    return $ch;
+}
 
-    curl_close($curl);
+function get_webcams($iso)
+{
+    $api_key = 'oDMHnb9KjCOwlV3YcIdJDBKWYsp4ra4L';
+    $endpoint = "https://api.windy.com/api/webcams/v2/list/country=" . $iso . "/orderby=popularity/limit=50?show=webcams:location,image,player&key=" . $api_key;
+    return get_handle($endpoint);
+}
 
-    return $data;
+function get_places($lonMin, $lonMax, $latMin, $latMax)
+{
+    $api_key = "5ae2e3f221c38a28845f05b6dfcb929e3d59f12d3afce65a63819f9a";
+    $kinds = array("architecture", "cultural", "historic", "industrial_facilities", "natural", "religion");
+    $handles = array();
+
+    foreach ($kinds as $kind) {
+        $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lonMin . "&lon_max=" . $lonMax . "&lat_min=" . $latMin . "&lat_max=" . $latMax . "&kinds=" . $kind . "&limit=25&apikey=" . $api_key;
+        array_push($handles, get_handle($endpoint));
+    }
+
+    return $handles;
 }
 
 switch ($_REQUEST['type']) {
@@ -68,77 +130,67 @@ switch ($_REQUEST['type']) {
         }
 
         break;
+    case 'data':
+        $iso = $_REQUEST['iso'];
+        $name = urlEncode('"' . $_REQUEST['name'] . '"');
+        $lat = $_REQUEST['lat'];
+        $lng = $_REQUEST['lng'];
+        $lonMin = $_REQUEST['lonMin'];
+        $lonMax = $_REQUEST['lonMax'];
+        $latMin = $_REQUEST['latMin'];
+        $latMax = $_REQUEST['latMax'];
+
+        // Info
+        $handles = array();
+        array_push($handles, get_info($iso));
+        array_push($handles, get_weather($lat, $lng));
+        array_push($handles, get_currency());
+        array_push($handles, get_news($name));
+        array_push($handles, get_wiki($name));
+
+        // Markers
+        array_push($handles, get_airports($iso));
+        array_push($handles, get_webcams($iso));
+        $handles = array_merge($handles, get_places($lonMin, $lonMax, $latMin, $latMax));
+
+        // Build multi-handle
+        $mh = curl_multi_init();
+        foreach ($handles as $ch) {
+            curl_multi_add_handle($mh, $ch);
+        }
+
+        // Execute
+        $running = null;
+        do {
+            curl_multi_exec($mh, $running);
+        } while ($running);
+
+        // Get results and remove handles
+        $results = array();
+        foreach ($handles as $ch) {
+            array_push($results, curl_multi_getcontent($ch));
+            curl_multi_remove_handle($mh, $ch);
+        }
+
+        // Close multi-handle
+        curl_multi_close($mh);
+
+        // Decode results
+        $data = array();
+        foreach ($results as $result) {
+            array_push($data, json_decode($result, true));
+        }
+
+        // Output data
+        $output['data'] = $data;
+        break;
     case 'place':
-        $id = $_REQUEST['id'];
+        $xid = $_REQUEST['xid'];
         $api_key = "5ae2e3f221c38a28845f05b6dfcb929e3d59f12d3afce65a63819f9a";
-        $endpoint = "https://api.opentripmap.com/0.1/en/places/xid/" . $id . "?apikey=" . $api_key;
+        $endpoint = "https://api.opentripmap.com/0.1/en/places/xid/" . $xid . "?apikey=" . $api_key;
         $result = curlRequest($endpoint);
         $decode = json_decode($result, true);
         $output['place'] = $decode;
-        break;
-    case 'places':
-        $kinds = $_REQUEST['kinds'];
-        $lon_min = $_REQUEST['lonMin'];
-        $lon_max = $_REQUEST['lonMax'];
-        $lat_min = $_REQUEST['latMin'];
-        $lat_max = $_REQUEST['latMax'];
-        $api_key = "5ae2e3f221c38a28845f05b6dfcb929e3d59f12d3afce65a63819f9a";
-        $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lon_min . "&lon_max=" . $lon_max . "&lat_min=" . $lat_min . "&lat_max=" . $lat_max . "&kinds=" . $kinds . "&limit=25&apikey=" . $api_key;
-        $result = curlRequest($endpoint);
-        $decode = json_decode($result, true);
-        $output['places'] = $decode;
-        break;
-    case 'info':
-        $iso = $_REQUEST['iso'];
-        $endpoint = "https://restcountries.eu/rest/v2/alpha/" . $iso;
-        $result = curlRequest($endpoint);
-        $decode = json_decode($result, true);
-        $output['info'] = $decode;
-        break;
-    case 'webcams':
-        $iso = $_REQUEST['iso'];
-        $api_key = 'oDMHnb9KjCOwlV3YcIdJDBKWYsp4ra4L';
-        $endpoint = "https://api.windy.com/api/webcams/v2/list/country=" . $iso . "/orderby=popularity/limit=50?show=webcams:location,image,player&key=" . $api_key;
-        $result = curlRequest($endpoint);
-        $decode = json_decode($result, true);
-        $output['webcams'] = $decode;
-        break;
-    case 'weather':
-        $lat = $_REQUEST['lat'];
-        $lng = $_REQUEST['lng'];
-        $appid = 'a686f31ef51e4b3f3ed3a24cc811378d';
-        $endpoint = 'https://api.openweathermap.org/data/2.5/onecall?lat=' . $lat . '&lon=' . $lng . '&exclude=minutely,hourly,alerts&units=metric&appid=' . $appid;
-        $result = curlRequest($endpoint);
-        $decode = json_decode($result, true);
-        $output['weather'] = $decode;
-        break;
-    case 'airports':
-        $iso = $_REQUEST['iso'];
-        $output['airports'] = get_airports($iso);
-        break;
-    case 'currency':
-        $app_id = "e3dcd947ba064c148ee3a7942d89329c";
-        $endpoint = 'https://openexchangerates.org/api/latest.json?app_id=' . $app_id;
-        $result = curlRequest($endpoint);
-        $decode = json_decode($result, true);
-        $output['currency'] = $decode;
-        break;
-    case 'news':
-        $api_key = '05d7dd167a6a42f48f770c5b2e2cf5b1';
-        $query = urlEncode('"' . $_REQUEST['name'] . '"');
-        $dt2 = new DateTime("-1 month");
-        $date = $dt2->format("YY-MM-DD");
-        $endpoint = 'https://newsapi.org/v2/everything?from=' . $date . '&qInTitle=' . $query . '&sortBy=popularity&apiKey=' . $api_key;
-        $result = curlRequest($endpoint);
-        $decode = json_decode($result, true);
-        $output['news'] = $decode;
-        break;
-    case 'wiki':
-        $query = urlEncode($_REQUEST['name']);
-        $endpoint = 'http://api.geonames.org/wikipediaSearchJSON?q=' . $query . '&maxRows=5&username=marqasa';
-        $result = curlRequest($endpoint);
-        $decode = json_decode($result, true);
-        $output['wiki'] = $decode;
         break;
     default:
         return;

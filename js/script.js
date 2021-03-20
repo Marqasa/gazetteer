@@ -1,29 +1,17 @@
 // Globals
 let map;
+let country;
+let currency;
 let feature;
 let polygons;
-let country;
 let changed = false;
 let markerGroup;
-
-// Info
-let loadInfo = false;
-let loadWeather = false;
-let loadCurrency = false;
-let loadNews = false;
-let loadWiki = false;
-
-// Markers
-let loadPlaces = false;
-let loadPlace = false;
-let loadAirports = false;
-let loadWebcams = true;
 
 $(window).on("load", function () {
   preLoad();
   loadMap();
   addPopupListener();
-  loadSelect();
+  requestSelect();
   getLocation();
 });
 
@@ -74,29 +62,13 @@ function addPopupListener() {
   );
 }
 
-function loadSelect() {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "select",
-    },
-    success: function (result) {
-      setSelect(result.select);
-    },
-
-    error: function (request, status, error) {},
-  });
-}
-
 function getLocation() {
   $.get(
     "https://ipinfo.io",
     function (data) {
       if (!changed) {
         country = data.country;
-        $("#country").val(country);
+        $("#country").val(data.country);
         $("#country").trigger("change");
       }
     },
@@ -118,84 +90,17 @@ function ajaxRequest(data, success) {
   });
 }
 
-function requestInfo(iso) {
-  if (!loadInfo) return;
-
-  const data = { type: "info", iso: iso };
+function requestSelect() {
+  const data = { type: "select" };
   const success = function (result) {
-    setInfo(result.info);
-    requestCurrency(result.info.currencies[0]);
+    setSelect(result.select);
   };
 
   ajaxRequest(data, success);
 }
 
-function requestWeather(point) {
-  if (!loadWeather) return;
-
-  const data = { type: "weather", lat: point.lat, lng: point.lng };
-  const success = function (result) {
-    setWeather(result.weather);
-  };
-
-  ajaxRequest(data, success);
-}
-
-function requestCurrency(currency) {
-  if (!loadCurrency) return;
-
-  const data = { type: "currency" };
-  const success = function (result) {
-    setCurrency(result.currency, currency);
-  };
-
-  ajaxRequest(data, success);
-}
-
-function requestNews(name) {
-  if (!loadNews) return;
-
-  const data = { type: "news", name: name };
-  const success = function (result) {
-    setNews(result.news);
-  };
-
-  ajaxRequest(data, success);
-}
-
-function requestWiki(name) {
-  if (!loadWiki) return;
-
-  const data = { type: "wiki", name: name };
-  const success = function (result) {
-    setWiki(result.wiki);
-  };
-
-  ajaxRequest(data, success);
-}
-
-function requestPlaces(bounds, kinds) {
-  if (!loadPlaces) return;
-
-  const data = {
-    type: "places",
-    kinds: kinds,
-    lonMin: bounds._southWest.lng,
-    lonMax: bounds._northEast.lng,
-    latMin: bounds._southWest.lat,
-    latMax: bounds._northEast.lat,
-  };
-  const success = function (result) {
-    setPlaces(result.places, kinds);
-  };
-
-  ajaxRequest(data, success);
-}
-
-function requestPlace(id, marker) {
-  if (!loadPlace) return;
-
-  const data = { type: "place", id: id };
+function requestPlace(xid, marker) {
+  const data = { type: "place", xid: xid };
   const success = function (result) {
     setPlace(result.place, marker);
   };
@@ -203,27 +108,17 @@ function requestPlace(id, marker) {
   ajaxRequest(data, success);
 }
 
-function requestAirports(iso) {
-  if (!loadAirports) return;
+$("#country").change(function () {
+  changed = true;
+  markerGroup.clearLayers();
 
-  const data = { type: "airports", iso: iso };
+  const data = { type: "feature", country: $("#country").val() };
   const success = function (result) {
-    setAirports(result.airports);
+    setFeature(result);
   };
 
   ajaxRequest(data, success);
-}
-
-function requestWebcams(iso) {
-  if (!loadWebcams) return;
-
-  const data = { type: "webcams", iso: iso };
-  const success = function (result) {
-    setWebcams(result.webcams);
-  };
-
-  ajaxRequest(data, success);
-}
+});
 
 //===-----------------------------------------------------------------------===
 // Display Data
@@ -271,25 +166,52 @@ function setSelect(select) {
   });
 }
 
-function setFeature(data) {
+function setFeature(result) {
   if (feature) {
     feature.clearLayers();
   }
-  polygons = data.geometry.coordinates;
-  feature = L.geoJson(data).addTo(map);
+  polygons = result.feature.geometry.coordinates;
+  feature = L.geoJson(result.feature).addTo(map);
   var bounds = feature.getBounds();
   map.fitBounds(bounds);
 
-  var center = bounds.getCenter();
+  const center = bounds.getCenter();
 
-  requestWeather(center);
+  const data = {
+    type: "data",
+    iso: result.feature.properties.iso_a2,
+    name: result.feature.properties.name,
+    lat: center.lat,
+    lng: center.lng,
+    lonMin: bounds._southWest.lng,
+    lonMax: bounds._northEast.lng,
+    latMin: bounds._southWest.lat,
+    latMax: bounds._northEast.lat,
+  };
+  const success = function (result) {
+    console.log(result);
+    $.each(result.data, function (i, o) {
+      if (o.capital) {
+        setInfo(o);
+      } else if (o.current) {
+        setWeather(o);
+      } else if (o.base) {
+        setCurrency(o);
+      } else if (o.articles) {
+        setNews(o);
+      } else if (o.geonames) {
+        setWiki(o);
+      } else if (o.meta) {
+        setAirports(o);
+      } else if (o.result) {
+        setWebcams(o);
+      } else if (o.features) {
+        setPlaces(o);
+      }
+    });
+  };
 
-  requestPlaces(bounds, "architecture");
-  requestPlaces(bounds, "cultural");
-  requestPlaces(bounds, "historic");
-  requestPlaces(bounds, "industrial_facilities");
-  requestPlaces(bounds, "natural");
-  requestPlaces(bounds, "religion");
+  ajaxRequest(data, success);
 }
 
 function setPlace(place, marker) {
@@ -450,25 +372,42 @@ function pointInPolygons(point) {
   return inside;
 }
 
-function setPlaces(places, kinds) {
-  $.each(places.features, function (i, p) {
+function setPlaces(places) {
+  $.each(places.features, function (i, f) {
     if (
-      !pointInPolygons([p.geometry.coordinates[0], p.geometry.coordinates[1]])
+      !pointInPolygons([f.geometry.coordinates[0], f.geometry.coordinates[1]])
     ) {
       return;
     }
+
+    const kind = f.properties.kinds.includes("natural")
+      ? "natural"
+      : f.properties.kinds.includes("religion")
+      ? "religion"
+      : f.properties.kinds.includes("cultural")
+      ? "cultural"
+      : f.properties.kinds.includes("historic")
+      ? "historic"
+      : f.properties.kinds.includes("industrial_facilities")
+      ? "industrial"
+      : "architecture";
 
     let color = "white";
     let shape = "circle";
     let prefix = "";
     let icon = "";
 
-    switch (kinds) {
-      case "architecture":
-        color = "brown";
-        shape = "square";
+    switch (kind) {
+      case "natural":
+        color = "green-dark";
+        prefix = "fab";
+        icon = "fa-canadian-maple-leaf";
+        break;
+      case "religion":
+        color = "purple";
+        shape = "penta";
         prefix = "fas";
-        icon = "fa-gopuram";
+        icon = "fa-place-of-worship";
         break;
       case "cultural":
         color = "cyan";
@@ -481,22 +420,17 @@ function setPlaces(places, kinds) {
         prefix = "far";
         icon = "fa-building";
         break;
-      case "industrial_facilities":
+      case "industrial":
         color = "yellow";
         shape = "square";
         prefix = "fas";
         icon = "fa-history";
         break;
-      case "natural":
-        color = "green-dark";
-        prefix = "fab";
-        icon = "fa-canadian-maple-leaf";
-        break;
-      case "religion":
-        color = "purple";
-        shape = "penta";
+      case "architecture":
+        color = "brown";
+        shape = "square";
         prefix = "fas";
-        icon = "fa-place-of-worship";
+        icon = "fa-gopuram";
         break;
     }
 
@@ -508,11 +442,11 @@ function setPlaces(places, kinds) {
     });
 
     let marker = L.marker(
-      [p.geometry.coordinates[1], p.geometry.coordinates[0]],
+      [f.geometry.coordinates[1], f.geometry.coordinates[0]],
       {
-        placeId: p.properties.xid,
+        placeXid: f.properties.xid,
         placeRequested: false,
-        title: p.properties.name,
+        title: f.properties.name,
         icon: markerIcon,
       }
     )
@@ -520,7 +454,7 @@ function setPlaces(places, kinds) {
       .on("click", function (e) {
         if (!e.target.options.placeRequested) {
           e.target.options.placeRequested = true;
-          requestPlace(e.target.options.placeId, e.target);
+          requestPlace(e.target.options.placeXid, e.target);
         }
       });
 
@@ -541,7 +475,7 @@ function setWiki(wiki) {
   $("#wiki-link4").attr("href", "https://" + wiki.geonames[4].wikipediaUrl);
 }
 
-function setCurrency(result, currency) {
+function setCurrency(result) {
   const currencies = {
     USD: {
       name: "US Dollar",
@@ -560,7 +494,7 @@ function setCurrency(result, currency) {
     },
   };
 
-  const code1 = currency.code;
+  const code1 = currency;
   const code2 = code1 === "USD" ? "EUR" : "USD";
   const code3 = code1 === "GBP" ? "EUR" : "GBP";
   const code4 = code1 === "CAD" ? "EUR" : "CAD";
@@ -728,6 +662,8 @@ function setWeather(data) {
 }
 
 function setInfo(info) {
+  currency = info.currencies[0].code;
+
   $("#info-flag").attr("src", info.flag);
 
   $("#info1-name").text("Capital:");
@@ -752,30 +688,3 @@ function setInfo(info) {
   $("#info5-name").text("Capital:");
   $("#info5-value").text(info.languages[0].name);
 }
-
-$("#country").change(function () {
-  changed = true;
-  markerGroup.clearLayers();
-
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "feature",
-      country: $("#country").val(),
-    },
-
-    success: function (result) {
-      country = result.feature.properties.iso_a2;
-      setFeature(result.feature);
-      requestAirports(country);
-      requestInfo(country);
-      requestWebcams(country);
-      requestNews(result.feature.properties.name);
-      requestWiki(result.feature.properties.name);
-    },
-
-    error: function (request, status, error) {},
-  });
-});
