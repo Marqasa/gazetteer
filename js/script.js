@@ -1,9 +1,23 @@
+// Globals
 let map;
 let feature;
 let polygons;
 let country;
 let changed = false;
 let markerGroup;
+
+// Info
+let loadInfo = false;
+let loadWeather = false;
+let loadCurrency = false;
+let loadNews = false;
+let loadWiki = false;
+
+// Markers
+let loadPlaces = false;
+let loadPlace = false;
+let loadAirports = false;
+let loadWebcams = true;
 
 $(window).on("load", function () {
   preLoad();
@@ -35,7 +49,7 @@ function loadMap() {
     "https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}{r}.{ext}",
     {
       attribution:
-        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        'Map tiles by <a href="https://stamen.com">Stamen Design</a>, <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       subdomains: "abcd",
       ext: "png",
     }
@@ -90,164 +104,130 @@ function getLocation() {
   );
 }
 
-function requestPlace(id, marker) {
+//===-----------------------------------------------------------------------===
+// Request Data
+//===-----------------------------------------------------------------------===
+function ajaxRequest(data, success) {
   $.ajax({
     url: "php/main.php",
     type: "POST",
     dataType: "json",
-    data: {
-      type: "place",
-      id: id,
-    },
-    success: function (result) {
-      setPlace(result.place, marker);
-    },
-
-    error: function (request, status, error) {},
-  });
-}
-
-function requestPlaces(bounds, kinds) {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "places",
-      kinds: kinds,
-      lonMin: bounds._southWest.lng,
-      lonMax: bounds._northEast.lng,
-      latMin: bounds._southWest.lat,
-      latMax: bounds._northEast.lat,
-    },
-    success: function (result) {
-      setPlaces(result.places, kinds);
-    },
-
-    error: function (request, status, error) {},
-  });
-}
-
-function requestWeather(center) {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "weather",
-      lat: center.lat,
-      lng: center.lng,
-    },
-    success: function (result) {
-      setWeather(result.weather);
-    },
-
-    error: function (request, status, error) {},
-  });
-}
-
-function requestAirports(iso) {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "airports",
-      iso: iso,
-    },
-    success: function (result) {
-      setAirports(result.airports);
-    },
-
-    error: function (request, status, error) {},
-  });
-}
-
-function requestCurrency(currency) {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "currency",
-    },
-    success: function (result) {
-      setCurrency(result.currency, currency);
-    },
-
+    data: data,
+    success: success,
     error: function (request, status, error) {},
   });
 }
 
 function requestInfo(iso) {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "info",
-      iso: iso,
-    },
-    success: function (result) {
-      setInfo(result.info);
-      requestCurrency(result.info.currencies[0]);
-    },
+  if (!loadInfo) return;
 
-    error: function (request, status, error) {},
-  });
+  const data = { type: "info", iso: iso };
+  const success = function (result) {
+    setInfo(result.info);
+    requestCurrency(result.info.currencies[0]);
+  };
+
+  ajaxRequest(data, success);
+}
+
+function requestWeather(point) {
+  if (!loadWeather) return;
+
+  const data = { type: "weather", lat: point.lat, lng: point.lng };
+  const success = function (result) {
+    setWeather(result.weather);
+  };
+
+  ajaxRequest(data, success);
+}
+
+function requestCurrency(currency) {
+  if (!loadCurrency) return;
+
+  const data = { type: "currency" };
+  const success = function (result) {
+    setCurrency(result.currency, currency);
+  };
+
+  ajaxRequest(data, success);
 }
 
 function requestNews(name) {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "news",
-      name: name,
-    },
-    success: function (result) {
-      setNews(result.news);
-    },
+  if (!loadNews) return;
 
-    error: function (request, status, error) {},
-  });
+  const data = { type: "news", name: name };
+  const success = function (result) {
+    setNews(result.news);
+  };
+
+  ajaxRequest(data, success);
 }
 
 function requestWiki(name) {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "wiki",
-      name: name,
-    },
-    success: function (result) {
-      setWiki(result.wiki);
-    },
+  if (!loadWiki) return;
 
-    error: function (request, status, error) {},
-  });
+  const data = { type: "wiki", name: name };
+  const success = function (result) {
+    setWiki(result.wiki);
+  };
+
+  ajaxRequest(data, success);
+}
+
+function requestPlaces(bounds, kinds) {
+  if (!loadPlaces) return;
+
+  const data = {
+    type: "places",
+    kinds: kinds,
+    lonMin: bounds._southWest.lng,
+    lonMax: bounds._northEast.lng,
+    latMin: bounds._southWest.lat,
+    latMax: bounds._northEast.lat,
+  };
+  const success = function (result) {
+    setPlaces(result.places, kinds);
+  };
+
+  ajaxRequest(data, success);
+}
+
+function requestPlace(id, marker) {
+  if (!loadPlace) return;
+
+  const data = { type: "place", id: id };
+  const success = function (result) {
+    setPlace(result.place, marker);
+  };
+
+  ajaxRequest(data, success);
+}
+
+function requestAirports(iso) {
+  if (!loadAirports) return;
+
+  const data = { type: "airports", iso: iso };
+  const success = function (result) {
+    setAirports(result.airports);
+  };
+
+  ajaxRequest(data, success);
 }
 
 function requestWebcams(iso) {
-  $.ajax({
-    url: "php/main.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      type: "webcams",
-      iso: iso,
-    },
-    success: function (result) {
-      setWebcams(result.webcams);
-    },
+  if (!loadWebcams) return;
 
-    error: function (request, status, error) {},
-  });
+  const data = { type: "webcams", iso: iso };
+  const success = function (result) {
+    setWebcams(result.webcams);
+  };
+
+  ajaxRequest(data, success);
 }
 
+//===-----------------------------------------------------------------------===
+// Display Data
+//===-----------------------------------------------------------------------===
 function fnum(x) {
   if (isNaN(x)) return x;
 
@@ -359,7 +339,7 @@ function setAirports(airports) {
       .addTo(map)
       .on("click", function (e) {
         var win = window.open(
-          "http://www.google.com/search?q=" + a.name,
+          "https://www.google.com/search?q=" + a.name,
           "_blank"
         );
         if (win) {
@@ -550,15 +530,15 @@ function setPlaces(places, kinds) {
 
 function setWiki(wiki) {
   $("#wiki-link0").text(wiki.geonames[0].title);
-  $("#wiki-link0").attr("href", "http://" + wiki.geonames[0].wikipediaUrl);
+  $("#wiki-link0").attr("href", "https://" + wiki.geonames[0].wikipediaUrl);
   $("#wiki-link1").text(wiki.geonames[1].title);
-  $("#wiki-link1").attr("href", "http://" + wiki.geonames[1].wikipediaUrl);
+  $("#wiki-link1").attr("href", "https://" + wiki.geonames[1].wikipediaUrl);
   $("#wiki-link2").text(wiki.geonames[2].title);
-  $("#wiki-link2").attr("href", "http://" + wiki.geonames[2].wikipediaUrl);
+  $("#wiki-link2").attr("href", "https://" + wiki.geonames[2].wikipediaUrl);
   $("#wiki-link3").text(wiki.geonames[3].title);
-  $("#wiki-link3").attr("href", "http://" + wiki.geonames[3].wikipediaUrl);
+  $("#wiki-link3").attr("href", "https://" + wiki.geonames[3].wikipediaUrl);
   $("#wiki-link4").text(wiki.geonames[4].title);
-  $("#wiki-link4").attr("href", "http://" + wiki.geonames[4].wikipediaUrl);
+  $("#wiki-link4").attr("href", "https://" + wiki.geonames[4].wikipediaUrl);
 }
 
 function setCurrency(result, currency) {
@@ -714,35 +694,35 @@ function setWeather(data) {
   $("#date1").text(day1 + " " + date1 + ":");
   $("#icon1").attr(
     "src",
-    "http://openweathermap.org/img/wn/" + icon1 + "@2x.png"
+    "https://openweathermap.org/img/wn/" + icon1 + "@2x.png"
   );
   $("#temp1").text(data.current.temp + "°");
 
   $("#date2").text(day2 + " " + date2 + ":");
   $("#icon2").attr(
     "src",
-    "http://openweathermap.org/img/wn/" + icon2 + "@2x.png"
+    "https://openweathermap.org/img/wn/" + icon2 + "@2x.png"
   );
   $("#temp2").text(data.daily[0].temp.day + "°");
 
   $("#date3").text(day3 + " " + date3 + ":");
   $("#icon3").attr(
     "src",
-    "http://openweathermap.org/img/wn/" + icon3 + "@2x.png"
+    "https://openweathermap.org/img/wn/" + icon3 + "@2x.png"
   );
   $("#temp3").text(data.daily[1].temp.day + "°");
 
   $("#date4").text(day4 + " " + date4 + ":");
   $("#icon4").attr(
     "src",
-    "http://openweathermap.org/img/wn/" + icon4 + "@2x.png"
+    "https://openweathermap.org/img/wn/" + icon4 + "@2x.png"
   );
   $("#temp4").text(data.daily[2].temp.day + "°");
 
   $("#date5").text(day5 + " " + date5 + ":");
   $("#icon5").attr(
     "src",
-    "http://openweathermap.org/img/wn/" + icon5 + "@2x.png"
+    "https://openweathermap.org/img/wn/" + icon5 + "@2x.png"
   );
   $("#temp5").text(data.daily[3].temp.day + "°");
 }
