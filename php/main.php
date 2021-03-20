@@ -90,18 +90,11 @@ function get_webcams($iso)
     return get_handle($endpoint);
 }
 
-function get_places($lonMin, $lonMax, $latMin, $latMax)
+function get_places($lonMin, $lonMax, $latMin, $latMax, $kind)
 {
     $api_key = "5ae2e3f221c38a28845f05b6dfcb929e3d59f12d3afce65a63819f9a";
-    $kinds = array("architecture", "cultural", "historic", "industrial_facilities", "natural", "religion");
-    $handles = array();
-
-    foreach ($kinds as $kind) {
-        $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lonMin . "&lon_max=" . $lonMax . "&lat_min=" . $latMin . "&lat_max=" . $latMax . "&kinds=" . $kind . "&limit=25&apikey=" . $api_key;
-        array_push($handles, get_handle($endpoint));
-    }
-
-    return $handles;
+    $endpoint = "https://api.opentripmap.com/0.1/en/places/bbox?lon_min=" . $lonMin . "&lon_max=" . $lonMax . "&lat_min=" . $latMin . "&lat_max=" . $latMax . "&kinds=" . $kind . "&limit=25&apikey=" . $api_key;
+    return get_handle($endpoint);
 }
 
 switch ($_REQUEST['type']) {
@@ -151,7 +144,12 @@ switch ($_REQUEST['type']) {
         // Markers
         array_push($handles, get_airports($iso));
         array_push($handles, get_webcams($iso));
-        $handles = array_merge($handles, get_places($lonMin, $lonMax, $latMin, $latMax));
+        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "architecture"));
+        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "cultural"));
+        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "historic"));
+        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "industrial_facilities"));
+        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "natural"));
+        array_push($handles, get_places($lonMin, $lonMax, $latMin, $latMax, "religion"));
 
         // Build multi-handle
         $mh = curl_multi_init();

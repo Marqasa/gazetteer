@@ -191,6 +191,7 @@ function setFeature(result) {
   const success = function (result) {
     console.log(result);
     $.each(result.data, function (i, o) {
+      if (o == null) return;
       if (o.capital) {
         setInfo(o);
       } else if (o.current) {
