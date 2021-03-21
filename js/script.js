@@ -1,7 +1,8 @@
 // Globals
 let map;
 let country;
-let currency;
+let currency_code;
+let currency_name;
 let feature;
 let polygons;
 let changed = false;
@@ -498,7 +499,7 @@ function setCurrency(result) {
     },
   };
 
-  const code1 = currency;
+  const code1 = currency_code;
   const code2 = code1 === "USD" ? "EUR" : "USD";
   const code3 = code1 === "GBP" ? "EUR" : "GBP";
   const code4 = code1 === "CAD" ? "EUR" : "CAD";
@@ -507,7 +508,7 @@ function setCurrency(result) {
   const name1 =
     code1 in currencies
       ? currencies[code1].name
-      : currency.name.replace(/\b\w/g, (l) => l.toUpperCase());
+      : currency_name.replace(/\b\w/g, (l) => l.toUpperCase());
   const name2 = currencies[code2].name;
   const name3 = currencies[code3].name;
   const name4 = currencies[code4].name;
@@ -666,7 +667,8 @@ function setWeather(data) {
 }
 
 function setInfo(info) {
-  currency = info.currencies[0].code;
+  currency_code = info.currencies[0].code;
+  currency_name = info.currencies[0].name;
 
   $("#info-flag").attr("src", info.flag);
 
