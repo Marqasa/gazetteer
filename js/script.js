@@ -37,8 +37,6 @@ function loadMap() {
   L.tileLayer(
     "https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}{r}.{ext}",
     {
-      attribution:
-        'Map tiles by <a href="https://stamen.com">Stamen Design</a>, <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       subdomains: "abcd",
       ext: "png",
     }
@@ -64,17 +62,9 @@ function addPopupListener() {
 }
 
 function getLocation() {
-  $.get(
-    "https://ipinfo.io",
-    function (data) {
-      if (!changed) {
-        country = data.country;
-        $("#country").val(data.country);
-        $("#country").trigger("change");
-      }
-    },
-    "jsonp"
-  );
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(requestLocation);
+  }
 }
 
 //===-----------------------------------------------------------------------===
@@ -89,6 +79,21 @@ function ajaxRequest(data, success) {
     success: success,
     error: function (request, status, error) {},
   });
+}
+
+function requestLocation(position) {
+  const data = {
+    type: "location",
+    lat: position.coords.latitude,
+    lng: position.coords.longitude,
+  };
+  const success = function (result) {
+    if (!changed) {
+      setFeature(result);
+    }
+  };
+
+  ajaxRequest(data, success);
 }
 
 function requestSelect() {
@@ -168,6 +173,7 @@ function setSelect(select) {
 }
 
 function setFeature(result) {
+  $("#country").val(result.feature.properties.iso_a2);
   if (feature) {
     feature.clearLayers();
   }

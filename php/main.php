@@ -110,6 +110,14 @@ switch ($_REQUEST['type']) {
         asort($select);
         $output['select'] = $select;
         break;
+    case 'location':
+        $lat = $_REQUEST['lat'];
+        $lng = $_REQUEST['lng'];
+        $endpoint = 'http://api.geonames.org/countryCode?type=JSON&lat=' . $lat . '&lng=' . $lng . '&username=marqasa';
+        $result = curlRequest($endpoint);
+        $decode = json_decode($result, true);
+        $_REQUEST['country'] = $decode['countryCode'];
+        // fallthrough
     case 'feature':
         $country = $_REQUEST['country'];
         $file = file_get_contents('../data/countryBorders.geo.json');
