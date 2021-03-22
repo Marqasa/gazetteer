@@ -113,7 +113,7 @@ switch ($_REQUEST['type']) {
     case 'location':
         $lat = $_REQUEST['lat'];
         $lng = $_REQUEST['lng'];
-        $endpoint = 'http://api.geonames.org/countryCode?type=JSON&lat=' . $lat . '&lng=' . $lng . '&username=marqasa';
+        $endpoint = 'http://api.geonames.org/countryCodeJSON?lat=' . $lat . '&lng=' . $lng . '&username=marqasa';
         $result = curlRequest($endpoint);
         $decode = json_decode($result, true);
         $_REQUEST['country'] = $decode['countryCode'];
