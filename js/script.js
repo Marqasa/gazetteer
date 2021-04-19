@@ -636,40 +636,40 @@ function setWeather(data) {
   var icon4 = data.daily[2].weather[0].icon;
   var icon5 = data.daily[3].weather[0].icon;
 
-  $("#date1").text(day1 + " " + date1 + ":");
+  $("#date1").text(day1 + " " + date1);
   $("#icon1").attr(
     "src",
     "https://openweathermap.org/img/wn/" + icon1 + "@2x.png"
   );
-  $("#temp1").text(data.current.temp + "°");
+  $("#temp1").text(data.current.temp.toFixed(2) + "°");
 
-  $("#date2").text(day2 + " " + date2 + ":");
+  $("#date2").text(day2 + " " + date2);
   $("#icon2").attr(
     "src",
     "https://openweathermap.org/img/wn/" + icon2 + "@2x.png"
   );
-  $("#temp2").text(data.daily[0].temp.day + "°");
+  $("#temp2").text(data.daily[0].temp.day.toFixed(2) + "°");
 
-  $("#date3").text(day3 + " " + date3 + ":");
+  $("#date3").text(day3 + " " + date3);
   $("#icon3").attr(
     "src",
     "https://openweathermap.org/img/wn/" + icon3 + "@2x.png"
   );
-  $("#temp3").text(data.daily[1].temp.day + "°");
+  $("#temp3").text(data.daily[1].temp.day.toFixed(2) + "°");
 
-  $("#date4").text(day4 + " " + date4 + ":");
+  $("#date4").text(day4 + " " + date4);
   $("#icon4").attr(
     "src",
     "https://openweathermap.org/img/wn/" + icon4 + "@2x.png"
   );
-  $("#temp4").text(data.daily[2].temp.day + "°");
+  $("#temp4").text(data.daily[2].temp.day.toFixed(2) + "°");
 
-  $("#date5").text(day5 + " " + date5 + ":");
+  $("#date5").text(day5 + " " + date5);
   $("#icon5").attr(
     "src",
     "https://openweathermap.org/img/wn/" + icon5 + "@2x.png"
   );
-  $("#temp5").text(data.daily[3].temp.day + "°");
+  $("#temp5").text(data.daily[3].temp.day.toFixed(2) + "°");
 }
 
 function setInfo(info) {
@@ -678,14 +678,15 @@ function setInfo(info) {
 
   $("#info-flag").attr("src", info.flag);
 
-  $("#info1-name").text("Capital:");
+  $("#info1-name").text("Capital");
   $("#info1-value").text(info.capital);
 
-  $("#info2-name").text("Region:");
+  $("#info2-name").text("Region");
   $("#info2-value").text(info.region);
 
   const population = fnum(info.population);
-  $("#info3-name").text("Population:");
+
+  $("#info3-name").text("Population");
   $("#info3-value").text(population);
 
   let languages = info.languages[0].name;
@@ -694,9 +695,6 @@ function setInfo(info) {
     languages += "/" + info.languages[1].name;
   }
 
-  $("#info4-name").text("Languages:");
+  $("#info4-name").text("Languages");
   $("#info4-value").text(languages);
-
-  $("#info5-name").text("Capital:");
-  $("#info5-value").text(info.languages[0].name);
 }
