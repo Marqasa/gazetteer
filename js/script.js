@@ -5,7 +5,7 @@ let currency_code;
 let currency_name;
 let feature;
 let polygons;
-let changed = false;
+let countryChange = false;
 let markerGroup;
 
 $(window).on("load", function () {
@@ -68,11 +68,11 @@ function getLocation() {
 }
 
 //===-----------------------------------------------------------------------===
-// Request Data
+// Request and set data
 //===-----------------------------------------------------------------------===
-function ajaxRequest(data, success) {
+function ajaxRequest(url, data, success) {
   $.ajax({
-    url: "php/main.php",
+    url: url,
     type: "POST",
     dataType: "json",
     data: data,
@@ -81,50 +81,60 @@ function ajaxRequest(data, success) {
   });
 }
 
+function requestSelect() {
+  const url = "php/select.php";
+
+  const success = function (result) {
+    $.each(result.select, function (k, v) {
+      var o = new Option(v, k);
+      $(o).html(v);
+      $("#country").append(o);
+    });
+  };
+
+  ajaxRequest(url, {}, success);
+}
+
+$("#country").change(function () {
+  countryChange = true;
+  markerGroup.clearLayers();
+
+  const url = "php/borders.php";
+  const data = { country: $("#country").val() };
+
+  const success = function (result) {
+    setFeature(result);
+  };
+
+  ajaxRequest(url, data, success);
+});
+
 function requestLocation(position) {
+  const url = "php/borders.php";
   const data = {
-    type: "location",
+    country: "",
     lat: position.coords.latitude,
     lng: position.coords.longitude,
   };
+
   const success = function (result) {
-    if (!changed) {
+    if (!countryChange) {
       setFeature(result);
     }
   };
 
-  ajaxRequest(data, success);
-}
-
-function requestSelect() {
-  const data = { type: "select" };
-  const success = function (result) {
-    setSelect(result.select);
-  };
-
-  ajaxRequest(data, success);
+  ajaxRequest(url, data, success);
 }
 
 function requestPlace(xid, marker) {
+  const url = "php/place.php";
   const data = { type: "place", xid: xid };
   const success = function (result) {
     setPlace(result.place, marker);
   };
 
-  ajaxRequest(data, success);
+  ajaxRequest(url, data, success);
 }
-
-$("#country").change(function () {
-  changed = true;
-  markerGroup.clearLayers();
-
-  const data = { type: "feature", country: $("#country").val() };
-  const success = function (result) {
-    setFeature(result);
-  };
-
-  ajaxRequest(data, success);
-});
 
 //===-----------------------------------------------------------------------===
 // Display Data
@@ -164,38 +174,30 @@ function getOrdinalNum(n) {
   );
 }
 
-function setSelect(select) {
-  $.each(select, function (k, v) {
-    var o = new Option(v, k);
-    $(o).html(v);
-    $("#country").append(o);
-  });
-}
-
 function setFeature(result) {
   $("#country").val(result.feature.properties.iso_a2);
+
   if (feature) {
     feature.clearLayers();
   }
+
   polygons = result.feature.geometry.coordinates;
   feature = L.geoJson(result.feature).addTo(map);
-  var bounds = feature.getBounds();
-  map.fitBounds(bounds);
 
+  const bounds = feature.getBounds();
   const center = bounds.getCenter();
 
-  const data = {
-    type: "data",
+  map.fitBounds(bounds);
+
+  // Request info
+  const infoUrl = "php/info.php";
+  const infoData = {
     iso: result.feature.properties.iso_a2,
     name: result.feature.properties.name,
     lat: center.lat,
     lng: center.lng,
-    lonMin: bounds._southWest.lng,
-    lonMax: bounds._northEast.lng,
-    latMin: bounds._southWest.lat,
-    latMax: bounds._northEast.lat,
   };
-  const success = function (result) {
+  const infoSuccess = function (result) {
     $.each(result.info, function (i, o) {
       if (o == null) return;
       if (o.capital) {
@@ -210,6 +212,21 @@ function setFeature(result) {
         setWiki(o);
       }
     });
+  };
+
+  ajaxRequest(infoUrl, infoData, infoSuccess);
+
+  // Request markers
+  const markersUrl = "php/markers.php";
+  const markersData = {
+    iso: result.feature.properties.iso_a2,
+    lonMin: bounds._southWest.lng,
+    lonMax: bounds._northEast.lng,
+    latMin: bounds._southWest.lat,
+    latMax: bounds._northEast.lat,
+  };
+  const markersSuccess = function (result) {
+    console.log(result);
     $.each(result.markers, function (i, o) {
       if (o == null) return;
       if (o.meta) {
@@ -222,7 +239,7 @@ function setFeature(result) {
     });
   };
 
-  ajaxRequest(data, success);
+  ajaxRequest(markersUrl, markersData, markersSuccess);
 }
 
 function setPlace(place, marker) {
