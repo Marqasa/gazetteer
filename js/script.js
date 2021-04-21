@@ -1,12 +1,14 @@
 // Globals
 let map;
+let airportsGroup;
+let webcamsGroup;
+let landmarksGroup;
 let country;
 let currency_code;
 let currency_name;
 let feature;
 let polygons;
 let countryChange = false;
-let markerGroup;
 
 $(window).on("load", function () {
   preLoad();
@@ -27,22 +29,36 @@ function preLoad() {
 }
 
 function loadMap() {
+  // Tiles
+  const watercolor = L.tileLayer.provider("Stamen.Watercolor"),
+    satellite = L.tileLayer.provider("Esri.WorldImagery"),
+    labels = L.tileLayer.provider("Stamen.TonerHybrid");
+
+  // Markers
+  airportsGroup = L.featureGroup();
+  webcamsGroup = L.featureGroup();
+  landmarksGroup = L.featureGroup();
+
   map = L.map("map", {
     tap: false,
     minZoom: 1,
     maxZoom: 16,
-  }).setView([0, 0], 2);
+    layers: [watercolor, labels, airportsGroup, webcamsGroup, landmarksGroup],
+  });
 
-  L.tileLayer.provider("Stamen.Watercolor").addTo(map);
-  L.tileLayer(
-    "https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}{r}.{ext}",
-    {
-      subdomains: "abcd",
-      ext: "png",
-    }
-  ).addTo(map);
+  var maps = {
+    Watercolor: watercolor,
+    Satellite: satellite,
+  };
 
-  markerGroup = L.layerGroup().addTo(map);
+  var overlays = {
+    Labels: labels,
+    Airports: airportsGroup,
+    Webcams: webcamsGroup,
+    Landmarks: landmarksGroup,
+  };
+
+  L.control.layers(maps, overlays).addTo(map);
 }
 
 function addPopupListener() {
@@ -97,7 +113,9 @@ function requestSelect() {
 
 $("#country").change(function () {
   countryChange = true;
-  markerGroup.clearLayers();
+  airportsGroup.clearLayers();
+  webcamsGroup.clearLayers();
+  landmarksGroup.clearLayers();
 
   const url = "php/borders.php";
   const data = { country: $("#country").val() };
@@ -182,7 +200,10 @@ function setFeature(result) {
   }
 
   polygons = result.feature.geometry.coordinates;
-  feature = L.geoJson(result.feature).addTo(map);
+  feature = L.geoJson(result.feature, {
+    color: "#1560BD",
+    fill: false,
+  }).addTo(map);
 
   const bounds = feature.getBounds();
   const center = bounds.getCenter();
@@ -285,19 +306,17 @@ function setAirports(airports) {
     let marker = L.marker([a.latitude, a.longitude], {
       title: a.name,
       icon: markerIcon,
-    })
-      .addTo(map)
-      .on("click", function (e) {
-        var win = window.open(
-          "https://www.google.com/search?q=" + a.name,
-          "_blank"
-        );
-        if (win) {
-          win.focus();
-        }
-      });
+    }).on("click", function (e) {
+      var win = window.open(
+        "https://www.google.com/search?q=" + a.name,
+        "_blank"
+      );
+      if (win) {
+        win.focus();
+      }
+    });
 
-    markerGroup.addLayer(marker);
+    airportsGroup.addLayer(marker);
   });
 }
 
@@ -355,11 +374,9 @@ function setWebcams(webcams) {
     let marker = L.marker([w.location.latitude, w.location.longitude], {
       title: w.title,
       icon: markerIcon,
-    })
-      .addTo(map)
-      .bindPopup(popup);
+    }).bindPopup(popup);
 
-    markerGroup.addLayer(marker);
+    webcamsGroup.addLayer(marker);
   });
 }
 
@@ -477,16 +494,14 @@ function setPlaces(places) {
         title: f.properties.name,
         icon: markerIcon,
       }
-    )
-      .addTo(map)
-      .on("click", function (e) {
-        if (!e.target.options.placeRequested) {
-          e.target.options.placeRequested = true;
-          requestPlace(e.target.options.placeXid, e.target);
-        }
-      });
+    ).on("click", function (e) {
+      if (!e.target.options.placeRequested) {
+        e.target.options.placeRequested = true;
+        requestPlace(e.target.options.placeXid, e.target);
+      }
+    });
 
-    markerGroup.addLayer(marker);
+    landmarksGroup.addLayer(marker);
   });
 }
 
