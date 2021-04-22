@@ -1,8 +1,20 @@
-// Globals
+// Map
 let map;
+
+// Feature Groups
 let airportsGroup;
 let webcamsGroup;
 let landmarksGroup;
+
+// Cluster Groups
+let naturalCluster;
+let religionCluster;
+let culturalCluster;
+let historicCluster;
+let industrialCluster;
+let architectureCluster;
+
+// Globals
 let country;
 let currency_code;
 let currency_name;
@@ -35,9 +47,112 @@ function loadMap() {
     labels = L.tileLayer.provider("Stamen.TonerHybrid");
 
   // Markers
-  airportsGroup = L.featureGroup();
-  webcamsGroup = L.featureGroup();
-  landmarksGroup = L.featureGroup();
+  airportsGroup = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+      return L.ExtraMarkers.icon({
+        shape: "square",
+        markerColor: "black",
+        icon: "fa-number",
+        iconColor: "#fff",
+        number: cluster.getChildCount(),
+      });
+    },
+    showCoverageOnHover: false,
+  });
+  webcamsGroup = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+      return L.ExtraMarkers.icon({
+        shape: "square",
+        markerColor: "white",
+        icon: "fa-number",
+        iconColor: "#000",
+        number: cluster.getChildCount(),
+      });
+    },
+    showCoverageOnHover: false,
+  });
+
+  naturalCluster = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+      return L.ExtraMarkers.icon({
+        shape: "square",
+        markerColor: "green-dark",
+        icon: "fa-number",
+        iconColor: "#fff",
+        number: cluster.getChildCount(),
+      });
+    },
+    showCoverageOnHover: false,
+  });
+  religionCluster = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+      return L.ExtraMarkers.icon({
+        shape: "square",
+        markerColor: "purple",
+        icon: "fa-number",
+        iconColor: "#fff",
+        number: cluster.getChildCount(),
+      });
+    },
+    showCoverageOnHover: false,
+  });
+  culturalCluster = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+      return L.ExtraMarkers.icon({
+        shape: "square",
+        markerColor: "cyan",
+        icon: "fa-number",
+        iconColor: "#fff",
+        number: cluster.getChildCount(),
+      });
+    },
+    showCoverageOnHover: false,
+  });
+  historicCluster = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+      return L.ExtraMarkers.icon({
+        shape: "square",
+        markerColor: "orange",
+        icon: "fa-number",
+        iconColor: "#fff",
+        number: cluster.getChildCount(),
+      });
+    },
+    showCoverageOnHover: false,
+  });
+  industrialCluster = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+      return L.ExtraMarkers.icon({
+        shape: "square",
+        markerColor: "yellow",
+        icon: "fa-number",
+        iconColor: "#fff",
+        number: cluster.getChildCount(),
+      });
+    },
+    showCoverageOnHover: false,
+  });
+  architectureCluster = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+      return L.ExtraMarkers.icon({
+        shape: "square",
+        markerColor: "brown",
+        icon: "fa-number",
+        iconColor: "#fff",
+        number: cluster.getChildCount(),
+      });
+    },
+    showCoverageOnHover: false,
+  });
+
+  landmarksGroup = L.featureGroup([
+    naturalCluster,
+    religionCluster,
+    culturalCluster,
+    historicCluster,
+    industrialCluster,
+    architectureCluster,
+  ]);
 
   map = L.map("map", {
     tap: false,
@@ -247,7 +362,6 @@ function setFeature(result) {
     latMax: bounds._northEast.lat,
   };
   const markersSuccess = function (result) {
-    console.log(result);
     $.each(result.markers, function (i, o) {
       if (o == null) return;
       if (o.meta) {
@@ -467,13 +581,11 @@ function setPlaces(places) {
         break;
       case "industrial":
         color = "yellow";
-        shape = "square";
         prefix = "fas";
         icon = "fa-history";
         break;
       case "architecture":
         color = "brown";
-        shape = "square";
         prefix = "fas";
         icon = "fa-gopuram";
         break;
@@ -501,7 +613,26 @@ function setPlaces(places) {
       }
     });
 
-    landmarksGroup.addLayer(marker);
+    switch (kind) {
+      case "natural":
+        naturalCluster.addLayer(marker);
+        break;
+      case "religion":
+        religionCluster.addLayer(marker);
+        break;
+      case "cultural":
+        culturalCluster.addLayer(marker);
+        break;
+      case "historic":
+        historicCluster.addLayer(marker);
+        break;
+      case "industrial":
+        industrialCluster.addLayer(marker);
+        break;
+      case "architecture":
+        architectureCluster.addLayer(marker);
+        break;
+    }
   });
 }
 
