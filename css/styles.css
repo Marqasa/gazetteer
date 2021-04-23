@@ -17,12 +17,11 @@ body,
 }
 
 table {
-  width: 100%;
+  table-layout: fixed;
 }
 
 tr,
-.flag,
-.icon {
+.flag {
   height: 40px;
 }
 
@@ -33,19 +32,31 @@ td p {
   font-size: 0.7em;
 }
 
-th,
-td {
-  padding: 5px;
+.weather-img {
+  padding: 0 !important;
+  width: 40px;
+  height: 40px;
 }
 
-.td-img {
+.weather-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.news-img {
   width: 50px;
   height: 50px;
 }
 
-.news-img {
+.news-img img {
   width: 100%;
   height: 100%;
+}
+
+.news-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .popup {

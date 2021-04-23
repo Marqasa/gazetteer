@@ -40,7 +40,7 @@ $(window).on("load", function () {
     satellite = L.tileLayer.provider("Esri.WorldImagery"),
     labels = L.tileLayer.provider("Stamen.TonerHybrid");
 
-  // Markers
+  // Marker clusters
   airportsCuster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
@@ -53,6 +53,7 @@ $(window).on("load", function () {
     },
     showCoverageOnHover: false,
   });
+
   webcamsCluster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
@@ -78,6 +79,7 @@ $(window).on("load", function () {
     },
     showCoverageOnHover: false,
   });
+
   religionCluster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
@@ -90,6 +92,7 @@ $(window).on("load", function () {
     },
     showCoverageOnHover: false,
   });
+
   culturalCluster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
@@ -102,6 +105,7 @@ $(window).on("load", function () {
     },
     showCoverageOnHover: false,
   });
+
   historicCluster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
@@ -114,6 +118,7 @@ $(window).on("load", function () {
     },
     showCoverageOnHover: false,
   });
+
   industrialCluster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
@@ -126,6 +131,7 @@ $(window).on("load", function () {
     },
     showCoverageOnHover: false,
   });
+
   architectureCluster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
@@ -148,6 +154,7 @@ $(window).on("load", function () {
     architectureCluster,
   ]);
 
+  // Maps
   map = L.map("map", {
     tap: false,
     minZoom: 1,
@@ -166,6 +173,7 @@ $(window).on("load", function () {
     Satellite: satellite,
   };
 
+  // Overlays
   var overlays = {
     Labels: labels,
     Airports: airportsCuster,
@@ -173,6 +181,7 @@ $(window).on("load", function () {
     Landmarks: landmarksGroup,
   };
 
+  // Map control
   L.control.layers(maps, overlays).addTo(map);
 
   // Populate select
@@ -372,7 +381,7 @@ function setFeature(result) {
     });
   };
 
-  ajaxRequest(markersUrl, markersData, markersSuccess);
+//   ajaxRequest(markersUrl, markersData, markersSuccess);
 }
 
 function setPlace(place, marker) {
@@ -714,23 +723,23 @@ function setNews(news) {
   const title1 =
     news.articles[0].title.length < 50
       ? news.articles[0].title
-      : news.articles[0].title.substr(0, 50) + "...";
+      : news.articles[0].title;
   const title2 =
     news.articles[1].title.length < 50
       ? news.articles[1].title
-      : news.articles[1].title.substr(0, 50) + "...";
+      : news.articles[1].title;
   const title3 =
     news.articles[2].title.length < 50
       ? news.articles[2].title
-      : news.articles[2].title.substr(0, 50) + "...";
+      : news.articles[2].title;
   const title4 =
     news.articles[3].title.length < 50
       ? news.articles[3].title
-      : news.articles[3].title.substr(0, 50) + "...";
+      : news.articles[3].title;
   const title5 =
     news.articles[4].title.length < 50
       ? news.articles[4].title
-      : news.articles[4].title.substr(0, 50) + "...";
+      : news.articles[4].title;
 
   const img1 = news.articles[0].urlToImage
     ? news.articles[0].urlToImage
