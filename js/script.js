@@ -2,8 +2,8 @@
 let map;
 
 // Feature Groups
-let airportsGroup;
-let webcamsGroup;
+let airportsCuster;
+let webcamsCluster;
 let landmarksGroup;
 
 // Cluster Groups
@@ -15,39 +15,33 @@ let industrialCluster;
 let architectureCluster;
 
 // Globals
-let country;
 let currency_code;
 let currency_name;
 let feature;
 let polygons;
 let countryChange = false;
 
-$(window).on("load", function () {
-  preLoad();
-  loadMap();
-  addPopupListener();
-  requestSelect();
-  getLocation();
-});
-
-function preLoad() {
-  if ($("#preloader").length) {
-    $("#preloader")
-      .delay(100)
-      .fadeOut("slow", function () {
-        $(this).remove();
-      });
-  }
+// Generic AJAX request
+function ajaxRequest(url, data, success) {
+  $.ajax({
+    url: url,
+    type: "POST",
+    dataType: "json",
+    data: data,
+    success: success,
+    error: function (request, status, error) {},
+  });
 }
 
-function loadMap() {
+// On page load
+$(window).on("load", function () {
   // Tiles
   const watercolor = L.tileLayer.provider("Stamen.Watercolor"),
     satellite = L.tileLayer.provider("Esri.WorldImagery"),
     labels = L.tileLayer.provider("Stamen.TonerHybrid");
 
   // Markers
-  airportsGroup = L.markerClusterGroup({
+  airportsCuster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
         shape: "square",
@@ -59,7 +53,7 @@ function loadMap() {
     },
     showCoverageOnHover: false,
   });
-  webcamsGroup = L.markerClusterGroup({
+  webcamsCluster = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
       return L.ExtraMarkers.icon({
         shape: "square",
@@ -158,8 +152,14 @@ function loadMap() {
     tap: false,
     minZoom: 1,
     maxZoom: 16,
-    layers: [watercolor, labels, airportsGroup, webcamsGroup, landmarksGroup],
-  });
+    layers: [
+      watercolor,
+      labels,
+      airportsCuster,
+      webcamsCluster,
+      landmarksGroup,
+    ],
+  }).setView([40, 0], 3);
 
   var maps = {
     Watercolor: watercolor,
@@ -168,15 +168,36 @@ function loadMap() {
 
   var overlays = {
     Labels: labels,
-    Airports: airportsGroup,
-    Webcams: webcamsGroup,
+    Airports: airportsCuster,
+    Webcams: webcamsCluster,
     Landmarks: landmarksGroup,
   };
 
   L.control.layers(maps, overlays).addTo(map);
-}
 
-function addPopupListener() {
+  // Populate select
+  const url = "php/select.php";
+
+  const success = function (result) {
+    $.each(result.select, function (k, v) {
+      var o = new Option(v, k);
+      $(o).html(v);
+      $("#country").append(o);
+    });
+  };
+
+  ajaxRequest(url, {}, success);
+
+  // Remove Preloader
+  if ($("#preloader").length) {
+    $("#preloader")
+      .delay(100)
+      .fadeOut("slow", function () {
+        $(this).remove();
+      });
+  }
+
+  // Add Popup Listener
   document.querySelector(".leaflet-popup-pane").addEventListener(
     "load",
     function (event) {
@@ -190,47 +211,41 @@ function addPopupListener() {
     },
     true
   );
-}
 
-function getLocation() {
+  // Get location
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(requestLocation);
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const url = "php/borders.php";
+      const data = {
+        country: "",
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+
+      const success = function (result) {
+        if (!countryChange) {
+          setFeature(result);
+        }
+      };
+
+      ajaxRequest(url, data, success);
+    });
   }
-}
+});
 
 //===-----------------------------------------------------------------------===
 // Request and set data
 //===-----------------------------------------------------------------------===
-function ajaxRequest(url, data, success) {
-  $.ajax({
-    url: url,
-    type: "POST",
-    dataType: "json",
-    data: data,
-    success: success,
-    error: function (request, status, error) {},
-  });
-}
-
-function requestSelect() {
-  const url = "php/select.php";
-
-  const success = function (result) {
-    $.each(result.select, function (k, v) {
-      var o = new Option(v, k);
-      $(o).html(v);
-      $("#country").append(o);
-    });
-  };
-
-  ajaxRequest(url, {}, success);
-}
-
 $("#country").change(function () {
   countryChange = true;
-  airportsGroup.clearLayers();
-  webcamsGroup.clearLayers();
-  landmarksGroup.clearLayers();
+  airportsCuster.clearLayers();
+  webcamsCluster.clearLayers();
+  naturalCluster.clearLayers();
+  religionCluster.clearLayers();
+  culturalCluster.clearLayers();
+  historicCluster.clearLayers();
+  industrialCluster.clearLayers();
+  architectureCluster.clearLayers();
 
   const url = "php/borders.php";
   const data = { country: $("#country").val() };
@@ -241,23 +256,6 @@ $("#country").change(function () {
 
   ajaxRequest(url, data, success);
 });
-
-function requestLocation(position) {
-  const url = "php/borders.php";
-  const data = {
-    country: "",
-    lat: position.coords.latitude,
-    lng: position.coords.longitude,
-  };
-
-  const success = function (result) {
-    if (!countryChange) {
-      setFeature(result);
-    }
-  };
-
-  ajaxRequest(url, data, success);
-}
 
 function requestPlace(xid, marker) {
   const url = "php/place.php";
@@ -430,7 +428,7 @@ function setAirports(airports) {
       }
     });
 
-    airportsGroup.addLayer(marker);
+    airportsCuster.addLayer(marker);
   });
 }
 
@@ -490,7 +488,7 @@ function setWebcams(webcams) {
       icon: markerIcon,
     }).bindPopup(popup);
 
-    webcamsGroup.addLayer(marker);
+    webcamsCluster.addLayer(marker);
   });
 }
 
