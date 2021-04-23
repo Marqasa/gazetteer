@@ -357,7 +357,7 @@ function setFeature(result) {
     });
   };
 
-  ajaxRequest(infoUrl, infoData, infoSuccess);
+  //   ajaxRequest(infoUrl, infoData, infoSuccess);
 
   // Request markers
   const markersUrl = "php/markers.php";
@@ -381,17 +381,24 @@ function setFeature(result) {
     });
   };
 
-//   ajaxRequest(markersUrl, markersData, markersSuccess);
+  ajaxRequest(markersUrl, markersData, markersSuccess);
 }
 
 function setPlace(place, marker) {
-  const preview = place.preview
-    ? '<p><img class="popup-image" src="' +
-      place.preview.source +
+  let img = new Image();
+  let preview = "";
+
+  if (place.preview) {
+    img.src = place.preview.source;
+    img.alt = place.name;
+    preview =
+      '<p><img class="popup-image" src="' +
+      img.src +
       '" alt="' +
-      place.name +
-      '"/></p>'
-    : "";
+      img.alt +
+      '"/></p>';
+  }
+
   const name = "<p><b>" + place.name + "</b></p>";
   const extracts = place.wikipedia_extracts
     ? place.wikipedia_extracts.html

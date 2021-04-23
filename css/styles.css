@@ -66,6 +66,7 @@ td p {
 
 .popup-image {
   width: 100%;
+  height: auto;
 }
 
 .leaflet-popup-scrolled {
