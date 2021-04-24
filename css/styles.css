@@ -47,16 +47,28 @@ td p {
   height: 80px;
 }
 
-.news-img {
+.news-img-outer {
   padding: 10px !important;
   width: 80px;
   height: 80px;
 }
 
-.news-img img {
+.news-img-inner {
+  position: relative;
+  overflow: hidden;
   border-radius: 10%;
-  width: 100%;
-  height: 100%;
+  width: 60px;
+  height: 60px;
+}
+
+.news-img-inner img {
+  position: absolute;
+  height: 60px;
+  top: -9999px;
+  bottom: -9999px;
+  left: -9999px;
+  right: -9999px;
+  margin: auto;
 }
 
 .news-title {
