@@ -357,7 +357,7 @@ function setFeature(result) {
     });
   };
 
-  //   ajaxRequest(infoUrl, infoData, infoSuccess);
+  ajaxRequest(infoUrl, infoData, infoSuccess);
 
   // Request markers
   const markersUrl = "php/markers.php";
